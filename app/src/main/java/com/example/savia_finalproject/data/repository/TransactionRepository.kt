@@ -5,11 +5,10 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
 class TransactionRepository {
+    private val _items = MutableStateFlow<List<Transaction>>(emptyList())
+    val items: StateFlow<List<Transaction>> = _items
 
-    private val _transactions = MutableStateFlow<List<Transaction>>(emptyList())
-    val transactions: StateFlow<List<Transaction>> = _transactions
-
-    fun addTransaction(transaction: Transaction) {
-        _transactions.value = _transactions.value + transaction
+    fun add(transaction: Transaction) {
+        _items.value = _items.value + transaction
     }
 }

@@ -3,7 +3,7 @@ package com.example.savia_finalproject.data.model
 import java.util.*
 
 data class Transaction(
-    val id: Int = 0,
+    val id: Long = Date().time,
     val type: TransactionType,
     val description: String,
     val amount: Double,
@@ -12,6 +12,5 @@ data class Transaction(
 )
 
 enum class TransactionType {
-    PEMASUKAN,
-    PENGELUARAN
+    PEMASUKAN, PENGELUARAN
 }

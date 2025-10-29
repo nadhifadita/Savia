@@ -4,17 +4,20 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.savia_finalproject.data.model.Transaction
 import com.example.savia_finalproject.data.repository.TransactionRepository
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 class TransactionViewModel(
     private val repository: TransactionRepository = TransactionRepository()
 ) : ViewModel() {
 
-    val transactions = repository.transactions
+    // expose as StateFlow for UI consumption
+    val transactions = repository.items
 
-    fun addTransaction(transaction: Transaction) {
+    fun addTransaction(t: Transaction) {
         viewModelScope.launch {
-            repository.addTransaction(transaction)
+            repository.add(t)
         }
     }
 }
