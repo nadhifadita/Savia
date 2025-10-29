@@ -16,6 +16,7 @@ import com.example.savia_finalproject.data.model.Transaction
 import com.example.savia_finalproject.data.model.TransactionType
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.math.abs
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -143,18 +144,21 @@ fun TransactionBottomSheet(
         // Save button
         Button(
             onClick = {
-                val amt = amount.replace(",", "").toDoubleOrNull() ?: 0.0
+                val rawAmount = amount.replace(",", "").toDoubleOrNull() ?: 0.0
+                val finalAmount = if (type == TransactionType.PENGELUARAN) -abs(rawAmount) else abs(rawAmount)
                 val tx = Transaction(
-                    type = type,
+                    type = type, // Tipe sudah benar
                     description = description,
-                    amount = amt,
+                    amount = finalAmount, // Gunakan nilai yang sudah disesuaikan
                     category = category.ifEmpty { if (type == TransactionType.PEMASUKAN) "Lainnya" else "Lainnya" },
                     date = date
                 )
                 onSave(tx)
                 onDismiss()
             },
-            modifier = Modifier.fillMaxWidth().height(48.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(48.dp),
             shape = RoundedCornerShape(10.dp),
             colors = ButtonDefaults.buttonColors(containerColor = primaryBlue)
         ) {
