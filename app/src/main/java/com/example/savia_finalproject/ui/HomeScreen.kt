@@ -58,7 +58,7 @@ fun DashboardScreen() {
             )
             Spacer(modifier = Modifier.Companion.height(16.dp))
 
-            // Card Saldo
+            // Saldo Card
             BalanceCard()
 
             Spacer(modifier = Modifier.Companion.height(24.dp))
