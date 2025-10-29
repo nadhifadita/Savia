@@ -17,9 +17,10 @@ fun HomeScreen(viewModel: TransactionViewModel) {
     Scaffold(
         floatingActionButton = {
             ExtendedFloatingActionButton(
-                text = { Text("Tambah Transaksi") },
                 onClick = { showSheet = true }
-            )
+            ) {
+                Text("Tambah Transaksi")
+            }
         }
     ) { padding ->
         Box(Modifier.padding(padding)) {
