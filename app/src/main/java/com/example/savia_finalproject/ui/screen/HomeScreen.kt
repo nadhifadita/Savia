@@ -1,4 +1,4 @@
-package com.example.savia_finalproject.ui
+package com.example.savia_finalproject.ui.screen
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -33,6 +33,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.savia_finalproject.ui.components.BalanceCard
+import com.example.savia_finalproject.ui.components.BottomNavBar
 
 @Composable
 fun DashboardScreen() {
@@ -98,79 +100,6 @@ fun DashboardScreen() {
                 color = Color.Companion.Gray,
                 fontSize = 14.sp,
                 modifier = Modifier.Companion.padding(top = 16.dp)
-            )
-        }
-    }
-}
-
-@Composable
-fun BalanceCard() {
-    Card(
-        modifier = Modifier.Companion.fillMaxWidth(),
-        colors = CardDefaults.cardColors(
-            containerColor = Color(0xFF247CF0)
-        ),
-        shape = androidx.compose.foundation.shape.RoundedCornerShape(16.dp)
-    ) {
-        Column(
-            modifier = Modifier.Companion.padding(20.dp)
-        ) {
-            Text(
-                text = "Saldo Total",
-                color = Color.Companion.White,
-                fontSize = 14.sp
-            )
-            Text(
-                text = "Rp 0",
-                color = Color.Companion.White,
-                style = MaterialTheme.typography.headlineLarge.copy(fontWeight = FontWeight.Companion.Bold)
-            )
-
-            Spacer(modifier = Modifier.Companion.height(8.dp))
-
-            Row(
-                horizontalArrangement = Arrangement.SpaceBetween,
-                modifier = Modifier.Companion.fillMaxWidth()
-            ) {
-                Column {
-                    Text("Pemasukan", color = Color.Companion.White.copy(alpha = 0.7f))
-                    Text(
-                        "Rp 0",
-                        color = Color.Companion.White,
-                        fontWeight = FontWeight.Companion.Bold
-                    )
-                }
-                Column {
-                    Text("Pengeluaran", color = Color.Companion.White.copy(alpha = 0.7f))
-                    Text(
-                        "Rp 0",
-                        color = Color.Companion.White,
-                        fontWeight = FontWeight.Companion.Bold
-                    )
-                }
-            }
-        }
-    }
-}
-
-@Composable
-fun BottomNavBar() {
-    NavigationBar {
-        val icons = listOf(
-            Icons.Default.Home,
-            Icons.AutoMirrored.Filled.List,
-            Icons.Default.Star,
-            Icons.Default.ShoppingCart,
-            Icons.Default.Person
-        )
-        val labels = listOf("Dashboard", "Transaksi", "Tujuan", "UMKM", "Profil")
-
-        icons.forEachIndexed { index, icon ->
-            NavigationBarItem(
-                selected = index == 0,
-                onClick = { /* TODO */ },
-                icon = { Icon(icon, contentDescription = labels[index]) },
-                label = { Text(labels[index]) }
             )
         }
     }

@@ -1,5 +1,5 @@
 package com.example.savia_finalproject
-import com.example.savia_finalproject.ui.DashboardScreen
+import com.example.savia_finalproject.ui.screen.DashboardScreen
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
