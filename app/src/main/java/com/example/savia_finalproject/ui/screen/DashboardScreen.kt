@@ -19,6 +19,7 @@ import androidx.compose.runtime.collectAsState
 import com.example.savia_finalproject.data.model.Transaction
 import androidx.compose.runtime.getValue
 import kotlin.math.abs
+import com.example.savia_finalproject.ui.components.WeeklyChart
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -26,6 +27,8 @@ fun DashboardScreen(viewModel: TransactionViewModel) {
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     val coroutineScope = rememberCoroutineScope()
     var showBottomSheet by remember { mutableStateOf(false) }
+    val weeklyChartDataState by viewModel.weeklyChartData.collectAsState()
+    val (weeklyEntries, weeklyLabels) = weeklyChartDataState
 
     // observe transactions
     val txs by viewModel.transactions.collectAsState()
@@ -56,6 +59,9 @@ fun DashboardScreen(viewModel: TransactionViewModel) {
                 // Gunakan abs() untuk menghilangkan tanda negatif saat ditampilkan
                 expense = viewModel.formatCurrency(abs(totalExpense))
             )
+            Spacer(modifier = Modifier.height(24.dp))
+
+            WeeklyChart(entries = weeklyEntries, labels = weeklyLabels)
             Spacer(modifier = Modifier.height(24.dp))
 
             Text(text = "Aksi Cepat", fontWeight = FontWeight.SemiBold, fontSize = 16.sp)
