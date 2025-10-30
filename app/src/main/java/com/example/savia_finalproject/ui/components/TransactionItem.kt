@@ -4,8 +4,12 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.KeyboardArrowLeft
+import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.KeyboardArrowUp
+import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -55,7 +59,7 @@ fun TransactionItem(transaction: Transaction) {
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
-                    imageVector = if (transaction.type == TransactionType.PEMASUKAN) Icons.Default.KeyboardArrowDown else Icons.Default.KeyboardArrowUp,
+                    imageVector = if (transaction.type == TransactionType.PEMASUKAN) Icons.Default.KeyboardArrowRight else Icons.Default.KeyboardArrowLeft,
                     contentDescription = transaction.type.name,
                     tint = if (transaction.type == TransactionType.PEMASUKAN) greenColor else redColor
                 )
