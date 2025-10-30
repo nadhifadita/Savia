@@ -17,7 +17,6 @@ import kotlinx.coroutines.launch
 import com.example.savia_finalproject.viewmodel.TransactionViewModel
 import androidx.compose.runtime.collectAsState
 import com.example.savia_finalproject.data.model.Transaction
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import kotlin.math.abs
 

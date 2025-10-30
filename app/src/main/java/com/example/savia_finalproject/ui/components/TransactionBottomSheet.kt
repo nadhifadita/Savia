@@ -1,6 +1,7 @@
 package com.example.savia_finalproject.ui.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -8,6 +9,8 @@ import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -29,8 +32,14 @@ fun TransactionBottomSheet(
     var amount by remember { mutableStateOf("") }
     var category by remember { mutableStateOf("") }
 
-    val date = remember { Date() }
-    val formattedDate = remember { SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(date) }
+
+    var selectedDate by remember { mutableStateOf(Date()) }
+    val dateFormat = remember { SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()) }
+    var formattedDate by remember(selectedDate) {
+        mutableStateOf(dateFormat.format(selectedDate))
+    }
+
+    val showDatePicker = remember { mutableStateOf(false) }
 
     val incomeCategories = listOf("Gaji", "Bonus", "Freelance", "Investasi", "Lainnya")
     val expenseCategories = listOf(
@@ -42,6 +51,32 @@ fun TransactionBottomSheet(
 
     var expanded by remember { mutableStateOf(false) }
     val primaryBlue = Color(0xFF0066FF)
+
+    if (showDatePicker.value) {
+        val datePickerState = rememberDatePickerState(
+            initialSelectedDateMillis = selectedDate.time,
+            yearRange = 2000..2030 // Sesuaikan rentang tahun jika perlu
+        )
+        DatePickerDialog(
+            onDismissRequest = { showDatePicker.value = false },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        showDatePicker.value = false
+                        // Ambil tanggal pilihan (epoch millis) dan ubah ke objek Date
+                        datePickerState.selectedDateMillis?.let { millis ->
+                            selectedDate = Date(millis)
+                        }
+                    }
+                ) { Text("OK") }
+            },
+            dismissButton = {
+                TextButton(onClick = { showDatePicker.value = false }) { Text("Batal") }
+            }
+        ) {
+            DatePicker(state = datePickerState)
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -131,13 +166,20 @@ fun TransactionBottomSheet(
             )
         }
 
-        SaviaOutlinedField(
-            label = "Tanggal",
-            placeholder = formattedDate,
-            value = formattedDate,
-            onValueChange = {},
-            readOnly = true
-        )
+        Box {
+            SaviaOutlinedField(
+                label = "Tanggal",
+                placeholder = formattedDate,
+                value = formattedDate,
+                onValueChange = {},
+                readOnly = true
+            )
+            Box(
+                modifier = Modifier
+                    .matchParentSize()
+                    .clickable(onClick = { showDatePicker.value = true })
+            )
+        }
 
         Spacer(modifier = Modifier.height(16.dp))
 
@@ -151,7 +193,7 @@ fun TransactionBottomSheet(
                     description = description,
                     amount = finalAmount, // Gunakan nilai yang sudah disesuaikan
                     category = category.ifEmpty { if (type == TransactionType.PEMASUKAN) "Lainnya" else "Lainnya" },
-                    date = date
+                    date = selectedDate
                 )
                 onSave(tx)
                 onDismiss()
