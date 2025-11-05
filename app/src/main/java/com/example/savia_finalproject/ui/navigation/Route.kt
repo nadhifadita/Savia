@@ -6,4 +6,5 @@ object Routes {
     const val DASBOARD = "dashboard"
     const val TRANSACTION = "transaction"
     const val SPLASH = "splash"
+    const val LOGIN = "login"
 }

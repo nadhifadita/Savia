@@ -9,6 +9,7 @@ import com.example.savia_finalproject.ui.screen.DashboardScreen
 import com.example.savia_finalproject.ui.screen.SplashScreen
 import com.example.savia_finalproject.viewmodel.TransactionViewModel
 
+
 @Composable
 fun RootNavGraph(
     navController: NavHostController
@@ -20,18 +21,15 @@ fun RootNavGraph(
         // Splash tetap sama
         composable(Routes.SPLASH) {
             SplashScreen(onFinished = {
-                navController.navigate(Routes.DASBOARD) {
+                navController.navigate(Routes.LOGIN) {
                     popUpTo(Routes.SPLASH) { inclusive = true }
                     launchSingleTop = true
                 }
             })
         }
 
-        // Ganti: sebelumnya 'navigation(route = MAIN_GRAPH) { ... }'
-        // Sekarang: satu composable yang menampilkan MainScaffold
-        composable(Routes.DASBOARD) {
-            val vm: TransactionViewModel = viewModel()
-            DashboardScreen(viewModel = vm)
+        composable(Routes.LOGIN) {
+
         }
     }
 }
