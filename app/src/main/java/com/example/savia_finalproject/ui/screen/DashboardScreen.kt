@@ -2,6 +2,7 @@ package com.example.savia_finalproject.ui.screen
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -18,12 +19,16 @@ import com.example.savia_finalproject.viewmodel.TransactionViewModel
 import androidx.compose.runtime.collectAsState
 import com.example.savia_finalproject.data.model.Transaction
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
 import kotlin.math.abs
 import com.example.savia_finalproject.ui.components.WeeklyChart
 
 @OptIn(ExperimentalMaterial3Api::class)
+
 @Composable
-fun DashboardScreen(viewModel: TransactionViewModel) {
+fun DashboardScreen(viewModel: TransactionViewModel, navController: NavHostController) {
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     val coroutineScope = rememberCoroutineScope()
     var showBottomSheet by remember { mutableStateOf(false) }
@@ -75,7 +80,7 @@ fun DashboardScreen(viewModel: TransactionViewModel) {
                     }
                 },
                 modifier = Modifier.fillMaxWidth(),
-                shape = androidx.compose.foundation.shape.RoundedCornerShape(12.dp)
+                shape = RoundedCornerShape(12.dp)
             ) {
                 Icon(Icons.Default.Add, contentDescription = null)
                 Spacer(modifier = Modifier.width(8.dp))
