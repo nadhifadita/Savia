@@ -29,13 +29,8 @@ fun SplashScreen(
         contentAlignment = Alignment.Center
     ) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            Text(
-                text = "Compose Navigation App",
-                style =
-                    MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Bold)
-            )
-            Spacer(Modifier.height(16.dp))
-            CircularProgressIndicator()
+
+
         }
     }
 }

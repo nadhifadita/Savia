@@ -1,10 +1,13 @@
 package com.example.savia_finalproject.ui.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.savia_finalproject.ui.navigation.SplashScreen
+import com.example.savia_finalproject.ui.screen.DashboardScreen
+import com.example.savia_finalproject.ui.screen.SplashScreen
+import com.example.savia_finalproject.viewmodel.TransactionViewModel
 
 @Composable
 fun RootNavGraph(
@@ -17,7 +20,7 @@ fun RootNavGraph(
         // Splash tetap sama
         composable(Routes.SPLASH) {
             SplashScreen(onFinished = {
-                navController.navigate(Routes.MAIN_GRAPH) {
+                navController.navigate(Routes.DASBOARD) {
                     popUpTo(Routes.SPLASH) { inclusive = true }
                     launchSingleTop = true
                 }
@@ -26,8 +29,9 @@ fun RootNavGraph(
 
         // Ganti: sebelumnya 'navigation(route = MAIN_GRAPH) { ... }'
         // Sekarang: satu composable yang menampilkan MainScaffold
-        composable(Routes.MAIN_GRAPH) {
-            MainScaffold() // kita buat di langkah 3.2
+        composable(Routes.DASBOARD) {
+            val vm: TransactionViewModel = viewModel()
+            DashboardScreen(viewModel = vm)
         }
     }
 }

@@ -6,6 +6,8 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import com.example.savia_finalproject.ui.theme.SaviaFinalProjectTheme
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.compose.rememberNavController
+import com.example.savia_finalproject.ui.navigation.RootNavGraph
 import com.example.savia_finalproject.ui.screen.DashboardScreen
 import com.example.savia_finalproject.viewmodel.TransactionViewModel
 
@@ -16,8 +18,8 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             SaviaFinalProjectTheme {
-                val vm: TransactionViewModel = viewModel()
-                DashboardScreen(viewModel = vm)
+                val navController = rememberNavController()
+                RootNavGraph(navController = navController)
             }
         }
     }
