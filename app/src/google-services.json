@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "444047585867",
+    "project_id": "saviafinalproject",
+    "storage_bucket": "saviafinalproject.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:444047585867:android:b069d0ee1a68870d3653ce",
+        "android_client_info": {
+          "package_name": "com.example.savia_finalproject"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "444047585867-tavkjog1a6ilt7b1app2n2lh95j3nr44.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDWaTzwjvQIeZWM9RV6V2yFk-6NLG62uVI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "444047585867-tavkjog1a6ilt7b1app2n2lh95j3nr44.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
