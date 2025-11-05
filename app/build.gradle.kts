@@ -55,6 +55,7 @@ dependencies {
     implementation(libs.androidx.credentials)
     implementation(libs.androidx.credentials.play.services.auth)
     implementation(libs.googleid)
+    implementation(libs.firebase.firestore.ktx)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -76,4 +77,11 @@ dependencies {
     implementation("androidx.navigation:navigation-compose:2.8.3")
     // (Optional) Icons
     implementation("androidx.compose.material:material-icons-extended")
+
+    implementation(platform("com.google.firebase:firebase-bom:33.1.0")) // Use the latest BoM version
+
+    // 2. Add your Firebase dependencies WITHOUT specifying versions
+    implementation("com.google.firebase:firebase-firestore-ktx:25.1.1")
+    implementation("com.google.firebase:firebase-auth-ktx") // Example for Auth
+    implementation("com.google.firebase:firebase-analytics")
 }
