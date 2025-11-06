@@ -115,7 +115,7 @@ fun LoginScreen(
             Spacer(modifier = Modifier.height(16.dp))
 
             TextButton(
-                onClick = { navController.navigate("signup") }
+                onClick = { navController.navigate("sign up") }
             ) {
                 Text("Belum punya akun? Daftar di sini")
             }
