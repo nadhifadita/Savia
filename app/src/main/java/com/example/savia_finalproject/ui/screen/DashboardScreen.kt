@@ -24,11 +24,19 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import kotlin.math.abs
 import com.example.savia_finalproject.ui.components.WeeklyChart
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 
 @OptIn(ExperimentalMaterial3Api::class)
 
 @Composable
 fun DashboardScreen(viewModel: TransactionViewModel, navController: NavHostController) {
+
+    val auth = FirebaseAuth.getInstance()
+    val db = FirebaseFirestore.getInstance()
+    val user = auth.currentUser
+    var balance by remember { mutableStateOf(0.0) }
+
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     val coroutineScope = rememberCoroutineScope()
     var showBottomSheet by remember { mutableStateOf(false) }
@@ -41,6 +49,19 @@ fun DashboardScreen(viewModel: TransactionViewModel, navController: NavHostContr
     val totalIncome by viewModel.totalIncome.collectAsState()
     val totalExpense by viewModel.totalExpense.collectAsState()
 
+
+    LaunchedEffect(user) {
+        user?.uid?.let { uid ->
+            db.collection("users").document(uid)
+                .addSnapshotListener { snapshot, _ ->
+                    if (snapshot != null && snapshot.exists()) {
+                        balance = snapshot.getDouble("balance") ?: 0.0
+                    }
+                }
+        }
+    }
+
+    // Format balance
     Scaffold(
         bottomBar = { BottomNavBar() }
     ) { innerPadding ->
@@ -59,7 +80,7 @@ fun DashboardScreen(viewModel: TransactionViewModel, navController: NavHostContr
             Spacer(modifier = Modifier.height(16.dp))
 
             BalanceCard(
-                balance = viewModel.formatCurrency(totalBalance),
+                balance = viewModel.formatCurrency(balance),
                 income = viewModel.formatCurrency(totalIncome),
                 // Gunakan abs() untuk menghilangkan tanda negatif saat ditampilkan
                 expense = viewModel.formatCurrency(abs(totalExpense))
