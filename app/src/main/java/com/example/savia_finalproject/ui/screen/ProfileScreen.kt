@@ -129,6 +129,17 @@ fun ProfileScreen(navController: NavController) {
             ) {
                 Text("Logout", color = MaterialTheme.colorScheme.onError)
             }
+            Button(
+                onClick = {
+
+                    navController.navigate("dashboard") {
+                        popUpTo("profile") { inclusive = true }
+                    }
+                },
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text("kembali")
+            }
         }
     }
 }
