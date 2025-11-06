@@ -16,6 +16,7 @@ import androidx.compose.ui.text.style.TextAlign
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import androidx.navigation.NavController
+import com.example.savia_finalproject.ui.components.BottomNavBar
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -48,6 +49,7 @@ fun ProfileScreen(navController: NavController) {
     }
 
     Scaffold(
+        bottomBar = { BottomNavBar(navController = navController) },
         topBar = {
             CenterAlignedTopAppBar(
                 title = { Text("Profil Pengguna", fontWeight = FontWeight.Bold) }
