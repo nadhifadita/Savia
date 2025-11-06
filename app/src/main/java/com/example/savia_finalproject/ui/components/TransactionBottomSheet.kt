@@ -1,5 +1,6 @@
 package com.example.savia_finalproject.ui.components
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -17,6 +18,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.example.savia_finalproject.data.model.Transaction
 import com.example.savia_finalproject.data.model.TransactionType
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.abs
@@ -188,15 +191,56 @@ fun TransactionBottomSheet(
             onClick = {
                 val rawAmount = amount.replace(",", "").toDoubleOrNull() ?: 0.0
                 val finalAmount = if (type == TransactionType.PENGELUARAN) -abs(rawAmount) else abs(rawAmount)
+
                 val tx = Transaction(
-                    type = type, // Tipe sudah benar
+                    type = type,
                     description = description,
-                    amount = finalAmount, // Gunakan nilai yang sudah disesuaikan
+                    amount = finalAmount,
                     category = category.ifEmpty { if (type == TransactionType.PEMASUKAN) "Lainnya" else "Lainnya" },
                     date = selectedDate
                 )
-                onSave(tx)
-                onDismiss()
+
+                val auth = FirebaseAuth.getInstance()
+                val db = FirebaseFirestore.getInstance()
+                val userId = auth.currentUser?.uid
+
+                if (userId != null) {
+                    val userRef = db.collection("users").document(userId)
+
+                    db.runTransaction { transaction ->
+                        val snapshot = transaction.get(userRef)
+
+                        // Ambil saldo lama (default 0 jika belum ada)
+                        val oldBalance = snapshot.getDouble("balance") ?: 0.0
+                        val newBalance = oldBalance + finalAmount
+
+                        // Ambil transaksi lama, lalu tambahkan transaksi baru
+                        val oldTransactions = snapshot.get("transactions") as? List<Map<String, Any>> ?: emptyList()
+
+                        val newTransaction = mapOf(
+                            "type" to tx.type.name,
+                            "description" to tx.description,
+                            "amount" to tx.amount,
+                            "category" to tx.category,
+                            "date" to tx.date.time // simpan timestamp
+                        )
+
+                        val updatedTransactions = oldTransactions + newTransaction
+
+                        // Update balance dan transaksi di Firestore
+                        transaction.update(userRef, mapOf(
+                            "balance" to newBalance,
+                            "transactions" to updatedTransactions
+                        ))
+                    }.addOnSuccessListener {
+                        onSave(tx)
+                        onDismiss()
+                    }.addOnFailureListener { e ->
+                        Log.e("Firestore", "Gagal menyimpan transaksi", e)
+                    }
+                } else {
+                    Log.e("Firestore", "User belum login")
+                }
             },
             modifier = Modifier
                 .fillMaxWidth()

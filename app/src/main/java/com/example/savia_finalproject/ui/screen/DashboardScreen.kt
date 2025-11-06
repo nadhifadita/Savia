@@ -63,7 +63,7 @@ fun DashboardScreen(viewModel: TransactionViewModel, navController: NavHostContr
 
     // Format balance
     Scaffold(
-        bottomBar = { BottomNavBar() }
+        bottomBar = { BottomNavBar(navController = navController) }
     ) { innerPadding ->
         Column(
             modifier = Modifier

@@ -11,9 +11,11 @@ import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.navigation.NavController
+import com.example.savia_finalproject.ui.navigation.Routes
 
 @Composable
-fun BottomNavBar() {
+fun BottomNavBar(navController: NavController) {
     NavigationBar {
         val icons = listOf(
             Icons.Default.Home,
@@ -26,8 +28,8 @@ fun BottomNavBar() {
 
         icons.forEachIndexed { index, icon ->
             NavigationBarItem(
-                selected = index == 0,
-                onClick = { /* TODO */ },
+                selected = index == 4,
+                onClick = { navController.navigate(Routes.PROFILE) },
                 icon = { Icon(icon, contentDescription = labels[index]) },
                 label = { Text(labels[index]) }
             )
