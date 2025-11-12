@@ -114,11 +114,24 @@ fun DashboardScreen(viewModel: TransactionViewModel, navController: NavHostContr
             Spacer(modifier = Modifier.height(8.dp))
 
             if (txs.isEmpty()) {
-                Text(text = "Belum ada transaksi", color = Color.Gray, fontSize = 14.sp, modifier = Modifier.padding(top = 16.dp))
+                Text(
+                    text = "Belum ada transaksi",
+                    color = Color.Gray,
+                    fontSize = 14.sp,
+                    modifier = Modifier.padding(top = 16.dp)
+                )
             } else {
+                val recentTxs = txs.reversed().take(10)
                 Column(modifier = Modifier.fillMaxWidth()) {
-                    txs.reversed().forEach { tx ->
+                    recentTxs.forEach { tx ->
                         TransactionItem(tx)
+                    }
+                    Spacer(modifier = Modifier.height(8.dp))
+                    TextButton(
+                        onClick = { navController.navigate("transaksi") },
+                        modifier = Modifier.align(androidx.compose.ui.Alignment.CenterHorizontally)
+                    ) {
+                        Text("Lihat Semua Transaksi", color = MaterialTheme.colorScheme.primary)
                     }
                 }
             }

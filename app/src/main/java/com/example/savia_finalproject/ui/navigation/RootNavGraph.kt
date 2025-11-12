@@ -10,6 +10,7 @@ import com.example.savia_finalproject.ui.screen.DashboardScreen
 import com.example.savia_finalproject.ui.screen.SplashScreen
 import com.example.savia_finalproject.viewmodel.TransactionViewModel
 import com.example.savia_finalproject.ui.screen.LoginScreen
+import com.example.savia_finalproject.ui.screen.TransactionScreen
 import com.example.savia_finalproject.ui.screen.ProfileScreen
 import com.example.savia_finalproject.ui.screen.SignUpScreen
 import com.google.firebase.auth.FirebaseAuth
@@ -65,6 +66,15 @@ fun RootNavGraph(
                 navController = navController
             )
         }
+
+        composable(Routes.TRANSAKSI) {
+            val vm: TransactionViewModel = viewModel()
+            TransactionScreen(
+                viewModel = vm,
+                navController = navController
+            )
+        }
+
     }
 }
 
