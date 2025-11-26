@@ -1,10 +1,13 @@
 package com.example.savia_finalproject.ui.navigation
 
-import com.example.savia_finalproject.data.model.Transaction
-
 object Routes {
-    const val DASBOARD = "dashboard"
-    const val TRANSACTION = "transaction"
+    const val DASHBOARD = "dashboard"
     const val SPLASH = "splash"
+    const val TRANSAKSI = "transaksi"
     const val LOGIN = "login"
+    const val SIGNUP = "sign up"
+    const val PROFILE = "profile"
+
+    const val GOALS = "tujuan"
+    const val EDUCATION = "edukasi"
 }

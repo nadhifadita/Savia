@@ -2,34 +2,57 @@ package com.example.savia_finalproject.ui.components
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.List
+import androidx.compose.material.icons.filled.Book // Icon untuk Edukasi
+import androidx.compose.material.icons.filled.Flag // Icon untuk Goals/Tujuan
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.ShoppingCart
-import androidx.compose.material.icons.filled.Star
-import androidx.compose.material3.Icon
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarItem
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.graphics.Color
+import androidx.navigation.NavController
+import androidx.navigation.compose.currentBackStackEntryAsState
+import com.example.savia_finalproject.ui.navigation.Routes
+
+private val BluePrimary = Color(0xFF0052D4)
 
 @Composable
-fun BottomNavBar() {
-    NavigationBar {
-        val icons = listOf(
-            Icons.Default.Home,
-            Icons.AutoMirrored.Filled.List,
-            Icons.Default.Star,
-            Icons.Default.ShoppingCart,
-            Icons.Default.Person
-        )
-        val labels = listOf("Dashboard", "Transaksi", "Tujuan", "UMKM", "Profil")
+fun BottomNavBar(navController: NavController) {
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentRoute = navBackStackEntry?.destination?.route
 
-        icons.forEachIndexed { index, icon ->
+    NavigationBar(
+        containerColor = Color.White,
+        contentColor = BluePrimary
+    ) {
+        val items = listOf(
+            Triple(Routes.DASHBOARD, "Beranda", Icons.Default.Home),
+            Triple(Routes.TRANSAKSI, "Transaksi", Icons.AutoMirrored.Filled.List),
+            Triple(Routes.GOALS, "Target", Icons.Default.Flag), // Fitur Target Tabungan
+            Triple(Routes.EDUCATION, "Edukasi", Icons.Default.Book), // Fitur Edukasi
+            Triple(Routes.PROFILE, "Profil", Icons.Default.Person)
+        )
+
+        items.forEach { (route, label, icon) ->
             NavigationBarItem(
-                selected = index == 0,
-                onClick = { /* TODO */ },
-                icon = { Icon(icon, contentDescription = labels[index]) },
-                label = { Text(labels[index]) }
+                selected = currentRoute == route,
+                onClick = {
+                    if (currentRoute != route) {
+                        navController.navigate(route) {
+                            popUpTo(Routes.DASHBOARD) { saveState = true }
+                            launchSingleTop = true
+                            restoreState = true
+                        }
+                    }
+                },
+                icon = { Icon(icon, contentDescription = label) },
+                label = { Text(label) },
+                colors = NavigationBarItemDefaults.colors(
+                    selectedIconColor = BluePrimary,
+                    selectedTextColor = BluePrimary,
+                    indicatorColor = Color(0xFFE3F2FD), // Biru sangat muda
+                    unselectedIconColor = Color.Gray,
+                    unselectedTextColor = Color.Gray
+                )
             )
         }
     }
