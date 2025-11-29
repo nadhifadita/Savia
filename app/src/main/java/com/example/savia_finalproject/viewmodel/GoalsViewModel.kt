@@ -68,14 +68,9 @@ class GoalsViewModel(
         return balance.value >= goal.targetAmount
     }
 
-    fun deleteGoal(goal: Goal) {
+    fun deleteGoal(goalId: String) {
         viewModelScope.launch {
-            if (goal.id.isNotEmpty()) {
-                repository.deleteGoal(goal.id)
-                loadGoals()
-            } else {
-                Log.w("GoalsViewModel", "Goal ID is empty. Cannot delete.")
-            }
+            repository.deleteGoal(goalId)
         }
     }
 }

@@ -40,10 +40,7 @@ class GoalsRepository(
     }
     suspend fun deleteGoal(goalId: String) {
         try {
-            val uid = auth.currentUser?.uid ?: return
-            val userRef = db.collection("users").document(uid)
-            val goalRef = userRef.collection("goals").document(goalId)
-            goalRef.delete().await()
+            userRef().collection("goals").document(goalId).delete().await()
         } catch (e: Exception) {
             Log.e("GoalsRepository", "Error deleting goal: ${e.message}", e)
         }

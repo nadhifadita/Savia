@@ -136,11 +136,10 @@ fun GoalScreen(navController: NavHostController) {
                 contentPadding = PaddingValues(16.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                // CATATAN: Pastikan `goal.title` unik, atau lebih baik gunakan `goal.id` jika ada
-                items(items = goals, key = { it.title }) { goal ->
-                    GoalCard(goal = goal, balance = balance) {
-                        // Aksi untuk tombol "Gunakan Dana"
-                         viewModel.convertGoal(goal)
+                items(items = goals, key = { it.id }) { goal ->
+                    GoalCard(goal = goal, balance = balance) { selectedGoal ->
+                        viewModel.convertGoal(selectedGoal)
+                        viewModel.deleteGoal(selectedGoal.id)
                     }
                 }
             }
@@ -180,7 +179,7 @@ fun GoalScreen(navController: NavHostController) {
 }
 
 @Composable
-fun GoalCard(goal: Goal, balance: Long, onConvert: () -> Unit) {
+fun GoalCard(goal: Goal, balance: Long, onConvert: (Goal) -> Unit) {
     val progress = if (goal.targetAmount > 0) (balance.toFloat() / goal.targetAmount).coerceIn(0f, 1f) else 0f
     val formatRp = NumberFormat.getCurrencyInstance(Locale("in", "ID"))
 
@@ -202,7 +201,7 @@ fun GoalCard(goal: Goal, balance: Long, onConvert: () -> Unit) {
                 if (goal.isCompleted) {
                     Text("Tercapai! 🎉", color = Color(0xFF4CAF50), fontWeight = FontWeight.Bold)
                 } else {
-                    Text("${(progress * 100).toInt()}%", color = BluePrimary, fontWeight = FontWeight.Bold) // Sekarang variabel ini dikenali
+                    Text("${(progress * 100).toInt()}%", color = BluePrimary, fontWeight = FontWeight.Bold)
                 }
             }
 
@@ -214,7 +213,7 @@ fun GoalCard(goal: Goal, balance: Long, onConvert: () -> Unit) {
                     .fillMaxWidth()
                     .height(8.dp)
                     .clip(RoundedCornerShape(4.dp)),
-                color = if (goal.isCompleted) Color(0xFF4CAF50) else BluePrimary, // Sekarang variabel ini dikenali
+                color = if (goal.isCompleted) Color(0xFF4CAF50) else BluePrimary,
                 trackColor = Color.LightGray.copy(alpha = 0.3f)
             )
 
@@ -231,7 +230,7 @@ fun GoalCard(goal: Goal, balance: Long, onConvert: () -> Unit) {
             if (!goal.isCompleted && balance >= goal.targetAmount) {
                 Spacer(modifier = Modifier.height(16.dp))
                 Button(
-                    onClick = onConvert,
+                    onClick = { onConvert(goal) },
                     modifier = Modifier.align(Alignment.End)
                 ) {
                     Text("Gunakan Dana")
