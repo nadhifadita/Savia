@@ -12,22 +12,31 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.items // <-- Tambahkan import ini
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LinearProgressIndicator
+import androidx.compose.material3.ModalBottomSheet // <-- Tambahkan import ini
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SegmentedButtonDefaults.Icon
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -45,13 +54,18 @@ import com.example.savia_finalproject.data.repository.GoalsRepository
 import com.example.savia_finalproject.ui.components.BottomNavBar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.launch
 import java.text.NumberFormat
 import java.util.Locale
 
 private val BlueGradientEnd = Color(0xFF4364F7)
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun GoalScreen(navController: NavHostController) {
+    val scope = rememberCoroutineScope()
+    var showBottomSheet by remember { mutableStateOf(false) }
+    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
 
     val viewModel: GoalsViewModel = viewModel(
         factory = GoalsViewModelFactory(
@@ -71,10 +85,15 @@ fun GoalScreen(navController: NavHostController) {
         bottomBar = { BottomNavBar(navController) },
         floatingActionButton = {
             FloatingActionButton(
-                onClick = { /* TODO: Tambah Goals Baru */ },
-                containerColor = YellowAccent
+                onClick = {
+                    showBottomSheet = true
+                },
+                containerColor = YellowAccent,
+                contentColor = Color.Black,
+                shape = RoundedCornerShape(16.dp),
+                elevation = FloatingActionButtonDefaults.elevation(8.dp)
             ) {
-                Icon(Icons.Default.Add, contentDescription = "Tambah Target", tint = Color.Black)
+                Icon(Icons.Default.Add, contentDescription = "Tambah Goal")
             }
         }
     ) { padding ->
@@ -117,12 +136,48 @@ fun GoalScreen(navController: NavHostController) {
                 contentPadding = PaddingValues(16.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
+                // Gunakan items untuk menampilkan list data
                 items(goals) { goal ->
-                    GoalCard(
-                        goal = goal,
-                        balance = balance,
-                        onConvert = { viewModel.convertGoal(goal) }
+                    GoalCard(goal = goal, balance = balance) {
+                        // Aksi untuk tombol "Gunakan Dana"
+                        // viewModel.convertGoalToBalance(goal) // Contoh pemanggilan fungsi di ViewModel
+                    }
+                }
+            }
+        }
+
+        // --- PINDAHKAN BOTTOM SHEET KE SINI ---
+        // Letakkan di luar Column utama, agar tampil di atas segalanya.
+        if (showBottomSheet) {
+            ModalBottomSheet(
+                onDismissRequest = { showBottomSheet = false },
+                sheetState = sheetState,
+            ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text("Tambah Goal Baru", fontSize = 20.sp, fontWeight = FontWeight.Bold)
+                    Spacer(modifier = Modifier.height(20.dp))
+                    // Tambahkan TextField atau komponen lain untuk input
+                    TextField(
+                        state = rememberTextFieldState(initialText = "Goal"),
+                        label = { Text("Target Goal") },
+                        modifier = Modifier.fillMaxWidth()
                     )
+                    Text("Formulir untuk menambah goal akan ada di sini.")
+                    Spacer(modifier = Modifier.height(20.dp))
+                    Button(onClick = {
+                        scope.launch { sheetState.hide() }.invokeOnCompletion {
+                            if (!sheetState.isVisible) {
+                                showBottomSheet = false
+                            }
+                        }
+                    }) {
+                        Text("Tutup")
+                    }
                 }
             }
         }
@@ -130,9 +185,8 @@ fun GoalScreen(navController: NavHostController) {
 }
 
 @Composable
-fun GoalCard(goal: com.example.savia_finalproject.data.model.Goal, balance: Long, onConvert: () -> Unit) {
-
-    val progress = (balance.toFloat() / goal.targetAmount).coerceIn(0f, 1f)
+fun GoalCard(goal: Goal, balance: Long, onConvert: () -> Unit) {
+    val progress = if (goal.targetAmount > 0) (balance.toFloat() / goal.targetAmount).coerceIn(0f, 1f) else 0f
     val formatRp = NumberFormat.getCurrencyInstance(Locale("in", "ID"))
 
     Card(
@@ -145,7 +199,8 @@ fun GoalCard(goal: com.example.savia_finalproject.data.model.Goal, balance: Long
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(text = goal.title, fontWeight = FontWeight.Bold, fontSize = 16.sp)
 
@@ -175,13 +230,12 @@ fun GoalCard(goal: com.example.savia_finalproject.data.model.Goal, balance: Long
                 Text(formatRp.format(goal.targetAmount), color = Color.Gray, fontSize = 12.sp)
             }
 
-            Spacer(modifier = Modifier.height(8.dp))
-
-            // Jika balance mencukupi dan goal belum completed
+            // Hanya tampilkan tombol jika balance mencukupi DAN goal belum selesai
             if (!goal.isCompleted && balance >= goal.targetAmount) {
+                Spacer(modifier = Modifier.height(16.dp))
                 Button(
                     onClick = onConvert,
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.align(Alignment.End) // Opsi: Pindahkan tombol ke kanan
                 ) {
                     Text("Gunakan Dana")
                 }
