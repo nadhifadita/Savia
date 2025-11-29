@@ -49,6 +49,7 @@ class TransactionViewModel : ViewModel() {
         _transactions.value = _transactions.value + transaction
     }
 
+
     // total income
     val totalIncome: StateFlow<Double> = transactions.map { txs ->
         txs.filter { it.amount > 0 }.sumOf { it.amount }

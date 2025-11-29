@@ -1,5 +1,6 @@
 package com.example.savia_finalproject.data.repository
 
+import com.example.savia_finalproject.data.model.Goal
 import com.example.savia_finalproject.data.model.Transaction
 import com.example.savia_finalproject.data.model.TransactionType
 import com.google.firebase.auth.FirebaseAuth

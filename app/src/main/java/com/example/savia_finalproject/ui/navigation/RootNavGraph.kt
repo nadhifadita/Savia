@@ -49,7 +49,6 @@ fun RootNavGraph(navController: NavHostController) {
             TransactionScreen(viewModel = vm, navController = navController)
         }
 
-        // --- TAMBAHAN RUTE BARU ---
 
         composable(Routes.PROFILE) {
             ProfileScreen(navController = navController)
