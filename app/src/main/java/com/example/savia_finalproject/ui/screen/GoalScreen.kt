@@ -17,17 +17,24 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LinearProgressIndicator
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SegmentedButtonDefaults.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -43,6 +50,7 @@ import com.example.savia_finalproject.viewmodel.GoalsViewModel
 import com.example.savia_finalproject.viewmodel.viewmodel.GoalsViewModelFactory
 import com.example.savia_finalproject.data.repository.GoalsRepository
 import com.example.savia_finalproject.ui.components.BottomNavBar
+import com.example.savia_finalproject.ui.components.GoalBottomSheet
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import java.text.NumberFormat
@@ -50,10 +58,14 @@ import java.util.Locale
 
 private val BlueGradientEnd = Color(0xFF4364F7)
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun GoalScreen(navController: NavHostController) {
 
+    val userId = FirebaseAuth.getInstance().currentUser?.uid
+
     val viewModel: GoalsViewModel = viewModel(
+        key = userId,
         factory = GoalsViewModelFactory(
             GoalsRepository(
                 FirebaseAuth.getInstance(),
@@ -61,6 +73,12 @@ fun GoalScreen(navController: NavHostController) {
             )
         )
     )
+
+    LaunchedEffect(userId) {
+        viewModel.loadGoals()
+    }
+
+    var showSheet by remember { mutableStateOf(false) }
 
     val goals by viewModel.goals.collectAsState()
     val balance by viewModel.balance.collectAsState()
@@ -71,7 +89,7 @@ fun GoalScreen(navController: NavHostController) {
         bottomBar = { BottomNavBar(navController) },
         floatingActionButton = {
             FloatingActionButton(
-                onClick = { /* TODO: Tambah Goals Baru */ },
+                onClick = { showSheet = true },
                 containerColor = YellowAccent
             ) {
                 Icon(Icons.Default.Add, contentDescription = "Tambah Target", tint = Color.Black)
@@ -127,7 +145,20 @@ fun GoalScreen(navController: NavHostController) {
             }
         }
     }
+    if (showSheet) {
+        ModalBottomSheet(onDismissRequest = { showSheet = false }) {
+            GoalBottomSheet(
+                onDismiss = { showSheet = false },
+                onSaveSuccess = {
+                    viewModel.loadGoals()  // refresh list goals
+                }
+            )
+        }
+    }
+
 }
+
+val primaryBlue = Color(0xFF0066FF)
 
 @Composable
 fun GoalCard(goal: com.example.savia_finalproject.data.model.Goal, balance: Long, onConvert: () -> Unit) {
@@ -181,7 +212,11 @@ fun GoalCard(goal: com.example.savia_finalproject.data.model.Goal, balance: Long
             if (!goal.isCompleted && balance >= goal.targetAmount) {
                 Button(
                     onClick = onConvert,
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(48.dp),
+                    shape = RoundedCornerShape(10.dp),
+                    colors = ButtonDefaults.buttonColors(containerColor = primaryBlue)
                 ) {
                     Text("Gunakan Dana")
                 }

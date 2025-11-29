@@ -17,9 +17,6 @@ class GoalsRepository(
     private fun goalsRef() = userRef().collection("goals")
 
 
-    // ================================
-    // CREATE GOAL
-    // ================================
     suspend fun addGoal(goal: Goal) {
         val doc = goalsRef().document()
         val newGoal = goal.copy(id = doc.id)
@@ -27,9 +24,6 @@ class GoalsRepository(
     }
 
 
-    // ================================
-    // GET LIST GOALS
-    // ================================
     suspend fun getGoals(): List<Goal> {
         return goalsRef()
             .orderBy("createdAt")

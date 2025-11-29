@@ -26,7 +26,7 @@ class GoalsViewModel(
     }
 
 
-    private fun loadGoals() {
+    fun loadGoals() {
         viewModelScope.launch {
             _goals.value = repository.getGoals()
         }
