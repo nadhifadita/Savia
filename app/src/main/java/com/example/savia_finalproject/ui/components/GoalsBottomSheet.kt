@@ -1,108 +1,86 @@
 package com.example.savia_finalproject.ui.components
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Close
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import com.example.savia_finalproject.data.model.Goal
-import java.util.UUID
+import androidx.compose.ui.unit.sp
+import com.example.savia_finalproject.data.model.Goal // <-- PASTIKAN IMPORT INI BENAR
 
-
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun GoalBottomSheet(
     onDismiss: () -> Unit,
-    onSave: (Goal) -> Unit
+    onSave: (Goal) -> Unit // PERBAIKAN 1: Pastikan parameter `onSave` adalah `Goal`
 ) {
     var title by remember { mutableStateOf("") }
     var targetAmount by remember { mutableStateOf("") }
-
-    val primaryBlue = Color(0xFF0066FF)
+    var isTitleEmpty by remember { mutableStateOf(false) }
 
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 20.dp, vertical = 12.dp)
+            .padding(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        Text("Tambah Target Baru", fontSize = 20.sp, fontWeight = FontWeight.Bold)
+        Spacer(modifier = Modifier.height(24.dp))
 
-        // HEADER
-        Row(
+        // Input untuk Judul
+        OutlinedTextField(
+            value = title,
+            onValueChange = {
+                title = it
+                isTitleEmpty = it.isEmpty()
+            },
+            label = { Text("Nama Target (mis: Beli Mesin Kopi)") },
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text("Tambah Goals Keuangan", style = MaterialTheme.typography.titleMedium)
-            IconButton(onClick = onDismiss) {
-                Icon(Icons.Default.Close, contentDescription = "close")
+            singleLine = true,
+            isError = isTitleEmpty
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // Input untuk Jumlah
+        OutlinedTextField(
+            value = targetAmount,
+            onValueChange = { if (it.all { char -> char.isDigit() }) targetAmount = it },
+            label = { Text("Jumlah Target (mis: 5000000)") },
+            modifier = Modifier.fillMaxWidth(),
+            singleLine = true,
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+        )
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+        // Tombol Aksi
+        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
+            TextButton(onClick = onDismiss) { Text("Batal") }
+            Spacer(modifier = Modifier.width(8.dp))
+            Button(
+                onClick = {
+                    if (title.isNotBlank()) {
+                        // PERBAIKAN 2: Buat objek `Goal` dan kirimkan melalui `onSave`
+                        val newGoalObject = Goal(
+                            title = title,
+                            targetAmount = targetAmount.toLongOrNull() ?: 0L
+                            // Anda bisa menambahkan nilai default lainnya di sini jika ada
+                            // isCompleted = false
+                        )
+                        onSave(newGoalObject) // Mengirim objek dengan tipe yang benar
+                    } else {
+                        isTitleEmpty = true
+                    }
+                }
+            ) {
+                Text("Simpan")
             }
         }
-
-        Spacer(Modifier.height(16.dp))
-
-        // INPUT NAMA GOAL
-        SaviaOutlinedField(
-            label = "Nama Goals",
-            placeholder = "Contoh: Beli Laptop, Dana Darurat",
-            value = title,
-            onValueChange = { title = it }
-        )
-
-        // INPUT TARGET
-        SaviaOutlinedField(
-            label = "Target Nominal (Rp)",
-            placeholder = "0",
-            value = targetAmount,
-            onValueChange = { targetAmount = it }
-        )
-
-        Spacer(Modifier.height(16.dp))
-
-        // SAVE BUTTON
-        Button(
-            onClick = {
-                val goal = Goal(
-                    id = UUID.randomUUID().toString(),
-                    title = title,
-                    targetAmount = targetAmount.toLongOrNull() ?: 0L,
-                    savedAmount = 0L,
-                    isCompleted = false,
-                    createdAt = System.currentTimeMillis()
-                )
-
-                onSave(goal)
-                onDismiss()
-            },
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(48.dp),
-            shape = RoundedCornerShape(10.dp),
-            colors = ButtonDefaults.buttonColors(primaryBlue)
-        ) {
-            Text("Simpan Goal", color = Color.White)
-        }
-
-        Spacer(Modifier.height(8.dp))
     }
 }

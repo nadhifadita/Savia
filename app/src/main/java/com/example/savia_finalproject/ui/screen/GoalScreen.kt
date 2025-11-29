@@ -12,9 +12,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items // <-- Tambahkan import ini
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Button
@@ -25,10 +24,9 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LinearProgressIndicator
-import androidx.compose.material3.ModalBottomSheet // <-- Tambahkan import ini
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -42,16 +40,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.nestedscroll.nestedScrollModifierNode
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.savia_finalproject.data.model.Goal
-import com.example.savia_finalproject.viewmodel.GoalsViewModel
-import com.example.savia_finalproject.viewmodel.viewmodel.GoalsViewModelFactory
 import com.example.savia_finalproject.data.repository.GoalsRepository
 import com.example.savia_finalproject.ui.components.BottomNavBar
+import com.example.savia_finalproject.ui.components.GoalBottomSheet
+import com.example.savia_finalproject.viewmodel.GoalsViewModel
+import com.example.savia_finalproject.viewmodel.viewmodel.GoalsViewModelFactory
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.launch
@@ -88,7 +88,7 @@ fun GoalScreen(navController: NavHostController) {
                 onClick = {
                     showBottomSheet = true
                 },
-                containerColor = YellowAccent,
+                containerColor = YellowAccent, // Sekarang variabel ini dikenali
                 contentColor = Color.Black,
                 shape = RoundedCornerShape(16.dp),
                 elevation = FloatingActionButtonDefaults.elevation(8.dp)
@@ -110,7 +110,7 @@ fun GoalScreen(navController: NavHostController) {
                     .height(180.dp)
                     .clip(RoundedCornerShape(bottomStart = 30.dp, bottomEnd = 30.dp))
                     .background(
-                        brush = Brush.verticalGradient(colors = listOf(BluePrimary, BlueGradientEnd))
+                        brush = Brush.verticalGradient(colors = listOf(BluePrimary, BlueGradientEnd)) // Sekarang variabel ini dikenali
                     ),
                 contentAlignment = Alignment.CenterStart
             ) {
@@ -136,49 +136,44 @@ fun GoalScreen(navController: NavHostController) {
                 contentPadding = PaddingValues(16.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                // Gunakan items untuk menampilkan list data
-                items(goals) { goal ->
+                // CATATAN: Pastikan `goal.title` unik, atau lebih baik gunakan `goal.id` jika ada
+                items(items = goals, key = { it.title }) { goal ->
                     GoalCard(goal = goal, balance = balance) {
                         // Aksi untuk tombol "Gunakan Dana"
-                        // viewModel.convertGoalToBalance(goal) // Contoh pemanggilan fungsi di ViewModel
+                         viewModel.convertGoal(goal)
                     }
                 }
             }
         }
 
-        // --- PINDAHKAN BOTTOM SHEET KE SINI ---
-        // Letakkan di luar Column utama, agar tampil di atas segalanya.
+        // Bottom Sheet untuk menambah Goal baru
         if (showBottomSheet) {
             ModalBottomSheet(
                 onDismissRequest = { showBottomSheet = false },
                 sheetState = sheetState,
+                containerColor = Color.White
             ) {
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Text("Tambah Goal Baru", fontSize = 20.sp, fontWeight = FontWeight.Bold)
-                    Spacer(modifier = Modifier.height(20.dp))
-                    // Tambahkan TextField atau komponen lain untuk input
-                    TextField(
-                        state = rememberTextFieldState(initialText = "Goal"),
-                        label = { Text("Target Goal") },
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                    Text("Formulir untuk menambah goal akan ada di sini.")
-                    Spacer(modifier = Modifier.height(20.dp))
-                    Button(onClick = {
+                GoalBottomSheet(
+                    onDismiss = {
                         scope.launch { sheetState.hide() }.invokeOnCompletion {
                             if (!sheetState.isVisible) {
                                 showBottomSheet = false
                             }
                         }
-                    }) {
-                        Text("Tutup")
+                    },
+                    onSave = { newGoal ->
+                        viewModel.addGoal(
+                            newGoal.title,
+                            newGoal.targetAmount
+                        )
+                        // Otomatis tutup bottom sheet setelah menyimpan
+                        scope.launch { sheetState.hide() }.invokeOnCompletion {
+                            if (!sheetState.isVisible) {
+                                showBottomSheet = false
+                            }
+                        }
                     }
-                }
+                )
             }
         }
     }
@@ -207,7 +202,7 @@ fun GoalCard(goal: Goal, balance: Long, onConvert: () -> Unit) {
                 if (goal.isCompleted) {
                     Text("Tercapai! 🎉", color = Color(0xFF4CAF50), fontWeight = FontWeight.Bold)
                 } else {
-                    Text("${(progress * 100).toInt()}%", color = BluePrimary, fontWeight = FontWeight.Bold)
+                    Text("${(progress * 100).toInt()}%", color = BluePrimary, fontWeight = FontWeight.Bold) // Sekarang variabel ini dikenali
                 }
             }
 
@@ -215,8 +210,11 @@ fun GoalCard(goal: Goal, balance: Long, onConvert: () -> Unit) {
 
             LinearProgressIndicator(
                 progress = { progress },
-                modifier = Modifier.fillMaxWidth().height(8.dp).clip(RoundedCornerShape(4.dp)),
-                color = if (goal.isCompleted) Color(0xFF4CAF50) else BluePrimary,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(8.dp)
+                    .clip(RoundedCornerShape(4.dp)),
+                color = if (goal.isCompleted) Color(0xFF4CAF50) else BluePrimary, // Sekarang variabel ini dikenali
                 trackColor = Color.LightGray.copy(alpha = 0.3f)
             )
 
@@ -230,12 +228,11 @@ fun GoalCard(goal: Goal, balance: Long, onConvert: () -> Unit) {
                 Text(formatRp.format(goal.targetAmount), color = Color.Gray, fontSize = 12.sp)
             }
 
-            // Hanya tampilkan tombol jika balance mencukupi DAN goal belum selesai
             if (!goal.isCompleted && balance >= goal.targetAmount) {
                 Spacer(modifier = Modifier.height(16.dp))
                 Button(
                     onClick = onConvert,
-                    modifier = Modifier.align(Alignment.End) // Opsi: Pindahkan tombol ke kanan
+                    modifier = Modifier.align(Alignment.End)
                 ) {
                     Text("Gunakan Dana")
                 }

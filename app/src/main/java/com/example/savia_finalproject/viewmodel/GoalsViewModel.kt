@@ -1,5 +1,6 @@
 package com.example.savia_finalproject.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.savia_finalproject.data.model.Goal
@@ -8,6 +9,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
+import okhttp3.Dispatcher
 
 class GoalsViewModel(
     private val repository: GoalsRepository
@@ -64,5 +66,16 @@ class GoalsViewModel(
 
     fun isGoalReady(goal: Goal): Boolean {
         return balance.value >= goal.targetAmount
+    }
+
+    fun deleteGoal(goal: Goal) {
+        viewModelScope.launch {
+            if (goal.id.isNotEmpty()) {
+                repository.deleteGoal(goal.id)
+                loadGoals()
+            } else {
+                Log.w("GoalsViewModel", "Goal ID is empty. Cannot delete.")
+            }
+        }
     }
 }

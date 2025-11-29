@@ -1,5 +1,6 @@
 package com.example.savia_finalproject.data.repository
 
+import android.util.Log
 import com.example.savia_finalproject.data.model.Goal
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -36,6 +37,16 @@ class GoalsRepository(
             .get()
             .await()
             .toObjects(Goal::class.java)
+    }
+    suspend fun deleteGoal(goalId: String) {
+        try {
+            val uid = auth.currentUser?.uid ?: return
+            val userRef = db.collection("users").document(uid)
+            val goalRef = userRef.collection("goals").document(goalId)
+            goalRef.delete().await()
+        } catch (e: Exception) {
+            Log.e("GoalsRepository", "Error deleting goal: ${e.message}", e)
+        }
     }
 
 
@@ -81,4 +92,6 @@ class GoalsRepository(
         // Tandai goal selesai
         markGoalCompleted(goal.id)
     }
+
+
 }
