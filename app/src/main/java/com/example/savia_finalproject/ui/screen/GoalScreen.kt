@@ -139,7 +139,7 @@ fun GoalScreen(navController: NavHostController) {
                 items(items = goals, key = { it.id }) { goal ->
                     GoalCard(goal = goal, balance = balance) { selectedGoal ->
                         viewModel.convertGoal(selectedGoal)
-                        viewModel.deleteGoal(selectedGoal.id)
+//                        viewModel.deleteGoal(selectedGoal.id)
                     }
                 }
             }

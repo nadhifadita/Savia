@@ -12,12 +12,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.savia_finalproject.data.model.Goal // <-- PASTIKAN IMPORT INI BENAR
+import com.example.savia_finalproject.data.model.Goal
 
 @Composable
 fun GoalBottomSheet(
     onDismiss: () -> Unit,
-    onSave: (Goal) -> Unit // PERBAIKAN 1: Pastikan parameter `onSave` adalah `Goal`
+    onSave: (Goal) -> Unit
 ) {
     var title by remember { mutableStateOf("") }
     var targetAmount by remember { mutableStateOf("") }
@@ -66,14 +66,11 @@ fun GoalBottomSheet(
             Button(
                 onClick = {
                     if (title.isNotBlank()) {
-                        // PERBAIKAN 2: Buat objek `Goal` dan kirimkan melalui `onSave`
                         val newGoalObject = Goal(
                             title = title,
                             targetAmount = targetAmount.toLongOrNull() ?: 0L
-                            // Anda bisa menambahkan nilai default lainnya di sini jika ada
-                            // isCompleted = false
                         )
-                        onSave(newGoalObject) // Mengirim objek dengan tipe yang benar
+                        onSave(newGoalObject)
                     } else {
                         isTitleEmpty = true
                     }

@@ -17,20 +17,12 @@ class GoalsRepository(
 
     private fun goalsRef() = userRef().collection("goals")
 
-
-    // ================================
-    // CREATE GOAL
-    // ================================
     suspend fun addGoal(goal: Goal) {
         val doc = goalsRef().document()
         val newGoal = goal.copy(id = doc.id)
         doc.set(newGoal).await()
     }
 
-
-    // ================================
-    // GET LIST GOALS
-    // ================================
     suspend fun getGoals(): List<Goal> {
         return goalsRef()
             .orderBy("createdAt")
@@ -47,19 +39,12 @@ class GoalsRepository(
     }
 
 
-    // ================================
-    // UPDATE GOAL STATUS
-    // ================================
     suspend fun markGoalCompleted(goalId: String) {
         goalsRef().document(goalId)
             .update("isCompleted", true)
             .await()
     }
 
-
-    // ================================
-    // CONVERT GOAL TO TRANSACTION
-    // ================================
     suspend fun convertGoalToTransaction(goal: Goal) {
         val userDoc = userRef()
             .get()
@@ -87,7 +72,8 @@ class GoalsRepository(
         ).await()
 
         // Tandai goal selesai
-        markGoalCompleted(goal.id)
+//        markGoalCompleted(goal.id)
+        deleteGoal(goal.id)
     }
 
 

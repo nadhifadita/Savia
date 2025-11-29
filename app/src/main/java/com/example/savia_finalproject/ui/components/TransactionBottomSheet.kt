@@ -254,10 +254,7 @@ fun TransactionBottomSheet(
     }
 }
 
-/**
- * Small helper to show dropdown items using DropdownMenu (since ExposedDropdownMenuBox's
- * default ExposedDropdownMenu isn't directly usable in some versions).
- */
+
 @Composable
 private fun ExposedDropdownMenuBoxScopeLocalizedMenu(
     expanded: Boolean,

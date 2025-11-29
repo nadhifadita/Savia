@@ -79,8 +79,8 @@ fun TransactionScreen(viewModel: TransactionViewModel, navController: NavHostCon
                         sheetState.show()
                     }
                 },
-                containerColor = YellowAccent, // Warna Kuning
-                contentColor = Color.Black,    // Icon Hitam
+                containerColor = YellowAccent,
+                contentColor = Color.Black,
                 shape = RoundedCornerShape(16.dp),
                 elevation = FloatingActionButtonDefaults.elevation(8.dp)
             ) {
