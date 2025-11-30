@@ -30,6 +30,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -78,10 +79,25 @@ fun GoalScreen(navController: NavHostController) {
     )
 
     val goals by viewModel.goals.collectAsState()
-    val balance by viewModel.balance.collectAsState()
+    var balance by remember { mutableStateOf(0.0) }
+
+//    val balance by viewModel.balance.collectAsState()
 
     val formatRp = NumberFormat.getCurrencyInstance(Locale("in", "ID"))
+    val auth = FirebaseAuth.getInstance()
+    val db = FirebaseFirestore.getInstance()
+    val user = auth.currentUser
+    LaunchedEffect(user) {
+        user?.uid?.let { uid ->
+            db.collection("users").document(uid)
+                .addSnapshotListener { snapshot, _ ->
+                    if (snapshot != null && snapshot.exists()) {
+                        balance = snapshot.getDouble("balance") ?: 0.0
 
+                    }
+                }
+        }
+    }
     Scaffold(
         bottomBar = { BottomNavBar(navController) },
         floatingActionButton = {
@@ -138,7 +154,7 @@ fun GoalScreen(navController: NavHostController) {
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 items(items = goals, key = { it.id }) { goal ->
-                    GoalCard(goal = goal, balance = balance) { selectedGoal ->
+                    GoalCard(goal = goal, balance = balance.toLong()) { selectedGoal ->
                         viewModel.convertGoal(selectedGoal)
 //                        viewModel.deleteGoal(selectedGoal.id)
                     }
