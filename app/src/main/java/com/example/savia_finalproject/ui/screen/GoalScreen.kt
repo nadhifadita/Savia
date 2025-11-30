@@ -17,6 +17,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -88,7 +89,7 @@ fun GoalScreen(navController: NavHostController) {
                 onClick = {
                     showBottomSheet = true
                 },
-                containerColor = YellowAccent, // Sekarang variabel ini dikenali
+                containerColor = YellowAccent,
                 contentColor = Color.Black,
                 shape = RoundedCornerShape(16.dp),
                 elevation = FloatingActionButtonDefaults.elevation(8.dp)
@@ -231,7 +232,8 @@ fun GoalCard(goal: Goal, balance: Long, onConvert: (Goal) -> Unit) {
                 Spacer(modifier = Modifier.height(16.dp))
                 Button(
                     onClick = { onConvert(goal) },
-                    modifier = Modifier.align(Alignment.End)
+                    modifier = Modifier.align(Alignment.End),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF0066FF))
                 ) {
                     Text("Gunakan Dana")
                 }

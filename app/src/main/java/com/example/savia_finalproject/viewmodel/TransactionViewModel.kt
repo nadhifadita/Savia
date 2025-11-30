@@ -97,7 +97,7 @@ class TransactionViewModel : ViewModel() {
         val monthFormat = SimpleDateFormat("MMM", Locale("id", "ID"))
         val calendar = Calendar.getInstance()
 
-        // Ambil 6 bulan terakhir
+        // 6 bulan terakhir
         val last6Months = (0..5).map {
             val cal = Calendar.getInstance()
             cal.add(Calendar.MONTH, -it)
@@ -106,22 +106,22 @@ class TransactionViewModel : ViewModel() {
             cal.time
         }.reversed() // Urutkan dari terlama ke terbaru
 
-        // Siapkan label (Jan, Feb, Mar...)
+        // label bulan
         val labels = last6Months.map { monthFormat.format(it) }
 
-        // Hitung total per bulan
+        // total per bulan
         val entries = last6Months.mapIndexed { index, date ->
             val cal = Calendar.getInstance()
             cal.time = date
             val month = cal.get(Calendar.MONTH)
             val year = cal.get(Calendar.YEAR)
 
-            // Filter transaksi yang terjadi di bulan & tahun tersebut
+            // filter transaksi di bulan & tahun tersebut
             val total = txs.filter {
                 val txCal = Calendar.getInstance()
                 txCal.time = it.date
                 txCal.get(Calendar.MONTH) == month && txCal.get(Calendar.YEAR) == year
-            }.sumOf { it.amount } // Jumlahkan nominal (bisa disesuaikan mau Pemasukan/Pengeluaran/Saldo)
+            }.sumOf { it.amount }
 
             Entry(index.toFloat(), total.toFloat())
         }
