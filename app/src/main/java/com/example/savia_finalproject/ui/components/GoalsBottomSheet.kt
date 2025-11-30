@@ -1,6 +1,7 @@
 package com.example.savia_finalproject.ui.components
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -8,6 +9,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
@@ -19,6 +21,9 @@ fun GoalBottomSheet(
     onDismiss: () -> Unit,
     onSave: (Goal) -> Unit
 ) {
+
+    val primaryBlue = Color(0xFF0066FF)
+
     var title by remember { mutableStateOf("") }
     var targetAmount by remember { mutableStateOf("") }
     var isTitleEmpty by remember { mutableStateOf(false) }
@@ -63,7 +68,12 @@ fun GoalBottomSheet(
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
             TextButton(onClick = onDismiss) { Text("Batal") }
             Spacer(modifier = Modifier.width(8.dp))
+
             Button(
+                modifier = Modifier
+                    .height(48.dp),
+                shape = RoundedCornerShape(10.dp),
+                colors = ButtonDefaults.buttonColors(containerColor = primaryBlue),
                 onClick = {
                     if (title.isNotBlank()) {
                         val newGoalObject = Goal(
@@ -75,6 +85,7 @@ fun GoalBottomSheet(
                         isTitleEmpty = true
                     }
                 }
+
             ) {
                 Text("Simpan")
             }

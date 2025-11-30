@@ -26,7 +26,7 @@ fun BottomNavBar(navController: NavController) {
     ) {
         val items = listOf(
             Triple(Routes.DASHBOARD, "Beranda", Icons.Default.Home),
-            Triple(Routes.TRANSAKSI, "Transaksi", Icons.AutoMirrored.Filled.List),
+            Triple(Routes.TRANSAKSI, "transaksi", Icons.AutoMirrored.Filled.List),
             Triple(Routes.GOALS, "Target", Icons.Default.Flag), // Fitur Target Tabungan
             Triple(Routes.EDUCATION, "Edukasi", Icons.Default.Book), // Fitur Edukasi
             Triple(Routes.PROFILE, "Profil", Icons.Default.Person)

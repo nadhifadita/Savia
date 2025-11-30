@@ -17,6 +17,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -182,7 +183,7 @@ fun GoalScreen(navController: NavHostController) {
 fun GoalCard(goal: Goal, balance: Long, onConvert: (Goal) -> Unit) {
     val progress = if (goal.targetAmount > 0) (balance.toFloat() / goal.targetAmount).coerceIn(0f, 1f) else 0f
     val formatRp = NumberFormat.getCurrencyInstance(Locale("in", "ID"))
-
+    val primaryBlue = Color(0xFF0066FF)
     Card(
         colors = CardDefaults.cardColors(containerColor = Color.White),
         elevation = CardDefaults.cardElevation(4.dp),
@@ -232,6 +233,9 @@ fun GoalCard(goal: Goal, balance: Long, onConvert: (Goal) -> Unit) {
                 Button(
                     onClick = { onConvert(goal) },
                     modifier = Modifier.align(Alignment.End)
+                        .height(48.dp),
+                    shape = RoundedCornerShape(10.dp),
+                    colors = ButtonDefaults.buttonColors(containerColor = primaryBlue)
                 ) {
                     Text("Gunakan Dana")
                 }
