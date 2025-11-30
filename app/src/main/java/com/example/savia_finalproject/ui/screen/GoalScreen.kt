@@ -184,6 +184,7 @@ fun GoalCard(goal: Goal, balance: Long, onConvert: (Goal) -> Unit) {
     val progress = if (goal.targetAmount > 0) (balance.toFloat() / goal.targetAmount).coerceIn(0f, 1f) else 0f
     val formatRp = NumberFormat.getCurrencyInstance(Locale("in", "ID"))
     val primaryBlue = Color(0xFF0066FF)
+
     Card(
         colors = CardDefaults.cardColors(containerColor = Color.White),
         elevation = CardDefaults.cardElevation(4.dp),
@@ -230,6 +231,7 @@ fun GoalCard(goal: Goal, balance: Long, onConvert: (Goal) -> Unit) {
 
             if (!goal.isCompleted && balance >= goal.targetAmount) {
                 Spacer(modifier = Modifier.height(16.dp))
+
                 Button(
                     onClick = { onConvert(goal) },
                     modifier = Modifier.align(Alignment.End)
