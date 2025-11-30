@@ -153,32 +153,31 @@ fun ProfileScreen(navController: NavController) {
 
                             // Password
                             // Custom field untuk password visibility
-                            Column {
-                                Text("Password", fontSize = 12.sp, color = Color.Gray)
-                                OutlinedTextField(
-                                    value = password,
-                                    onValueChange = {},
-                                    readOnly = true,
-                                    visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-                                    trailingIcon = {
-                                        IconButton(onClick = { passwordVisible = !passwordVisible }) {
-                                            Icon(
-                                                imageVector = if (passwordVisible) Icons.Filled.VisibilityOff else Icons.Filled.Visibility,
-                                                contentDescription = null,
-                                                tint = BluePrimary
-                                            )
-                                        }
-                                    },
-                                    modifier = Modifier.fillMaxWidth(),
-                                    colors = OutlinedTextFieldDefaults.colors(
-                                        unfocusedBorderColor = Color.Transparent,
-                                        focusedBorderColor = Color.Transparent
-                                    ),
-                                    textStyle = LocalTextStyle.current.copy(fontWeight = FontWeight.SemiBold)
-                                )
-                            }
-
-                            Divider(color = Color.LightGray.copy(alpha = 0.3f))
+//                            Column {
+//                                Text("Password", fontSize = 12.sp, color = Color.Gray)
+//                                OutlinedTextField(
+//                                    value = password,
+//                                    onValueChange = {},
+//                                    readOnly = true,
+//                                    visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+//                                    trailingIcon = {
+////                                        IconButton(onClick = { passwordVisible = !passwordVisible }) {
+////                                            Icon(
+////                                                imageVector = if (passwordVisible) Icons.Filled.VisibilityOff else Icons.Filled.Visibility,
+////                                                contentDescription = null,
+////                                                tint = BluePrimary
+////                                            )
+////                                        }
+//                                    },
+//                                    modifier = Modifier.fillMaxWidth(),
+//                                    colors = OutlinedTextFieldDefaults.colors(
+//                                        unfocusedBorderColor = Color.Transparent,
+//                                        focusedBorderColor = Color.Transparent
+//                                    ),
+//                                    textStyle = LocalTextStyle.current.copy(fontWeight = FontWeight.SemiBold)
+//                                )
+//                            }
+//                            Divider(color = Color.LightGray.copy(alpha = 0.3f))
 
                             // Created At
                             ProfileField(label = "Bergabung Sejak", value = createdAt, icon = null)
