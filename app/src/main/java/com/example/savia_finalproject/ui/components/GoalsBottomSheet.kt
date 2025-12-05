@@ -3,7 +3,6 @@ package com.example.savia_finalproject.ui.components
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.*
@@ -14,7 +13,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.savia_finalproject.data.model.Goal
@@ -54,7 +52,13 @@ fun GoalBottomSheet(
             label = "Nama Target",
             placeholder = "mis: Beli Mesin Kopi",
             value = title,
-            onValueChange = { title = it }
+            onValueChange = {
+                title = it
+                // Reset error state when user starts typing
+                if (isTitleEmpty) isTitleEmpty = false
+            },
+            // Pass the isError parameter
+            isError = isTitleEmpty,
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -64,7 +68,9 @@ fun GoalBottomSheet(
             label = "Jumlah Target",
             placeholder = "mis: 5000000",
             value = targetAmount,
-            onValueChange = { targetAmount = it }
+            onValueChange = { targetAmount = it },
+            // Pass the isError parameter. For now, we assume it's never in an error state.
+            isError = false,
         )
 
         Spacer(modifier = Modifier.height(24.dp))
@@ -72,14 +78,14 @@ fun GoalBottomSheet(
         // Tombol Aksi
         Button(
             onClick = {
-                if (title.isNotBlank()) {
+                // Set isTitleEmpty to true if title is blank when the button is clicked
+                isTitleEmpty = title.isBlank()
+                if (!isTitleEmpty) {
                     val newGoalObject = Goal(
                         title = title,
                         targetAmount = targetAmount.toLongOrNull() ?: 0L
                     )
                     onSave(newGoalObject)
-                } else {
-                    isTitleEmpty = true
                 }
             },
             modifier = Modifier

@@ -19,7 +19,9 @@ fun SaviaOutlinedField(
     placeholder: String = "",
     value: String,
     onValueChange: (String) -> Unit,
-    readOnly: Boolean = false
+    readOnly: Boolean = false,
+    isError: Boolean = false,
+    supportingText: @Composable (() -> Unit)? = null
 ) {
     OutlinedTextField(
         value = value,
@@ -35,6 +37,8 @@ fun SaviaOutlinedField(
         colors = OutlinedTextFieldDefaults.colors(
             focusedBorderColor = Color(0xFF0066FF),
             unfocusedBorderColor = Color(0xFFE5E7EB)
-        )
+        ),
+        isError = isError,
+        supportingText = supportingText
     )
 }
