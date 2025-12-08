@@ -35,20 +35,9 @@ class TransactionViewModel : ViewModel() {
         }
     }
 
-    /**
-     * IMPORTANT:
-     * Karena TransactionBottomSheet (versi sekarang) sudah menulis transaksi langsung ke Firestore,
-     * kita tidak melakukan lagi write di sini untuk menghindari duplikat atau konflik.
-     *
-     * Jika kamu ingin semua penulisan dikelola lewat ViewModel (lebih bersih), beri tahu aku
-     * supaya aku pindahkan logic runTransaction ke sini dan ubah BottomSheet untuk memanggil viewModel.addTransaction(tx)
-     */
     fun addTransaction(transaction: Transaction) {
-        // no-op: Firestore write dilakukan oleh BottomSheet (sesuai kode yang kamu kirim)
-        // Tapi tetap bisa tambahkan ke local state agar UI bereaksi lebih cepat, Firestore snapshot listener akan meng-override.
         _transactions.value = _transactions.value + transaction
     }
-
 
     // total income
     val totalIncome: StateFlow<Double> = transactions.map { txs ->
@@ -93,23 +82,18 @@ class TransactionViewModel : ViewModel() {
 
 
     val monthlyChartData: StateFlow<Pair<List<Entry>, List<String>>> = transactions.map { txs ->
-        // Format: "MMM" (Jan, Feb, Mar) atau "MMM yyyy"
         val monthFormat = SimpleDateFormat("MMM", Locale("id", "ID"))
         val calendar = Calendar.getInstance()
 
-        // 6 bulan terakhir
         val last6Months = (0..5).map {
             val cal = Calendar.getInstance()
             cal.add(Calendar.MONTH, -it)
-            // Set ke awal bulan agar filter akurat
             cal.set(Calendar.DAY_OF_MONTH, 1)
             cal.time
-        }.reversed() // Urutkan dari terlama ke terbaru
+        }.reversed() 
 
-        // label bulan
         val labels = last6Months.map { monthFormat.format(it) }
 
-        // total per bulan
         val entries = last6Months.mapIndexed { index, date ->
             val cal = Calendar.getInstance()
             cal.time = date
