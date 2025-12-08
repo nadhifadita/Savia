@@ -30,7 +30,6 @@ interface NewsApiService {
     ): NewsResponse
 }
 
-// Singleton Retrofit (Tetap sama)
 object RetrofitClient {
     private const val BASE_URL = "https://newsapi.org/"
 
@@ -41,4 +40,5 @@ object RetrofitClient {
             .build()
             .create(NewsApiService::class.java)
     }
+
 }
