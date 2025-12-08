@@ -8,57 +8,58 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.savia_finalproject.ui.screen.*
 import com.example.savia_finalproject.viewmodel.TransactionViewModel
 import com.google.firebase.auth.FirebaseAuth
+import com.example.savia_finalproject.ui.screen.SplashScreen
 
 @Composable
 fun RootNavGraph(navController: NavHostController) {
     NavHost(
         navController = navController,
-        startDestination = Routes.SPLASH
+        startDestination = Route.SPLASH
     ) {
 
-        composable(Routes.SPLASH) {
+        composable(Route.SPLASH) {
             SplashScreen(onFinished = {
                 if (FirebaseAuth.getInstance().currentUser != null) {
-                    navController.navigate(Routes.DASHBOARD)
+                    navController.navigate(Route.DASHBOARD)
                 } else {
-                    navController.navigate(Routes.LOGIN)
+                    navController.navigate(Route.LOGIN)
                 }
             })
         }
 
-        composable(Routes.SIGNUP) { SignUpScreen(navController = navController) }
+        composable(Route.SIGNUP) { SignUpScreen(navController = navController) }
 
-        composable(Routes.LOGIN) {
+        composable(Route.LOGIN) {
             LoginScreen(
                 onLoginSuccess = {
-                    navController.navigate(Routes.DASHBOARD) {
-                        popUpTo(Routes.LOGIN) { inclusive = true }
+                    navController.navigate(Route.DASHBOARD) {
+                        popUpTo(Route.LOGIN) { inclusive = true }
                     }
                 },
                 navController = navController
             )
         }
 
-        composable(Routes.DASHBOARD) {
+        composable(Route.DASHBOARD) {
             val vm: TransactionViewModel = viewModel()
             DashboardScreen(viewModel = vm, navController = navController)
         }
 
-        composable(Routes.TRANSAKSI) {
+        composable(Route.TRANSAKSI) {
             val vm: TransactionViewModel = viewModel()
             TransactionScreen(viewModel = vm, navController = navController)
         }
 
 
-        composable(Routes.PROFILE) {
+        composable(Route.PROFILE) {
             ProfileScreen(navController = navController)
         }
 
-        composable(Routes.GOALS) {
+        composable(Route.GOALS) {
             GoalScreen(navController = navController)
         }
 
-        composable(Routes.EDUCATION) {
+        composable(Route.EDUCATION) {
             EducationScreen(navController = navController)
         }
     }

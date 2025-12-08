@@ -14,7 +14,15 @@
       },
       "oauth_client": [
         {
-          "client_id": "444047585867-tavkjog1a6ilt7b1app2n2lh95j3nr44.apps.googleusercontent.com",
+          "client_id": "444047585867-sh7l1afnooe8q6cv6dq1p78n76n4s2v5.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.savia_finalproject",
+            "certificate_hash": "b31495ea8aaa69367c49141edd8a40ee15ef9e9c"
+          }
+        },
+        {
+          "client_id": "444047585867-kqo54lnfqqi4emtbke6ub87lpsu1mtnu.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
@@ -27,7 +35,7 @@
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "444047585867-tavkjog1a6ilt7b1app2n2lh95j3nr44.apps.googleusercontent.com",
+              "client_id": "444047585867-kqo54lnfqqi4emtbke6ub87lpsu1mtnu.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

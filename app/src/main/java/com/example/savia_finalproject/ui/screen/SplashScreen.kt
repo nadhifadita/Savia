@@ -27,9 +27,7 @@ import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import com.example.savia_finalproject.R
-
 private val BlueGradientEnd = Color(0xFF4364F7)
-
 @Composable
 fun SplashScreen(
     onFinished: () -> Unit
@@ -46,32 +44,27 @@ fun SplashScreen(
             )
         }
 
-        // Offset menggunakan 'spring' agar memantul saat sampai di 0 (tengah)
         logoOffsetY.animateTo(
             targetValue = 0f,
             animationSpec = spring(
-                dampingRatio = Spring.DampingRatioMediumBouncy, // Efek memantul sedang
-                stiffness = Spring.StiffnessLow // Kecepatan pantulan
+                dampingRatio = Spring.DampingRatioMediumBouncy,
+                stiffness = Spring.StiffnessLow
             )
         )
 
-        // B. Setelah logo mendarat, munculkan Teks
-        delay(300) // Tunggu sebentar setelah pantulan
+        delay(300)
         textAlpha.animateTo(
             targetValue = 1f,
             animationSpec = tween(durationMillis = 800)
         )
 
-        // C. Tahan sebentar agar user bisa lihat brand, lalu pindah layar
         delay(1500)
         onFinished()
     }
 
-    // 3. UI Layout
     Box(
         modifier = Modifier
             .fillMaxSize()
-            // Background Gradient Biru agar Logo Kuning/Emas menonjol
             .background(
                 brush = Brush.verticalGradient(
                     colors = listOf(BluePrimary, BlueGradientEnd)
@@ -79,8 +72,6 @@ fun SplashScreen(
             ),
         contentAlignment = Alignment.Center
     ) {
-
-        // Hiasan Lingkaran Transparan di Background (Opsional, agar estetik)
         Box(
             modifier = Modifier
                 .size(400.dp)
@@ -104,7 +95,6 @@ fun SplashScreen(
                     .alpha(logoAlpha.value)
             )
 
-            // TEKS NAMA APLIKASI
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier.alpha(textAlpha.value)
@@ -118,12 +108,11 @@ fun SplashScreen(
             }
         }
 
-        // Copyright di bawah
         Box(
             modifier = Modifier
                 .align(Alignment.BottomCenter)
                 .padding(bottom = 32.dp)
-                .alpha(textAlpha.value) // Ikut muncul bareng teks judul
+                .alpha(textAlpha.value)
         ) {
             Text(
                 text = "Versi 1.0.0",

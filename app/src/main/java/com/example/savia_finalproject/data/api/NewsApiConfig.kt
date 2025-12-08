@@ -5,7 +5,6 @@ import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Query
 
-// Model Data (Tetap sama)
 data class NewsResponse(
     val status: String,
     val articles: List<NewsArticle>
@@ -21,15 +20,12 @@ data class NewsArticle(
 
 data class Source(val name: String)
 
-// Interface API (INI YANG DIUBAH)
 interface NewsApiService {
-
-    // Ganti endpoint ke 'everything' agar pencarian lebih luas
     @GET("v2/everything")
     suspend fun getNewsByQuery(
-        @Query("q") query: String,             // Kata kunci pencarian
-        @Query("language") language: String = "id", // Bahasa Indonesia
-        @Query("sortBy") sortBy: String = "publishedAt", // Urutkan dari yang terbaru
+        @Query("q") query: String,
+        @Query("language") language: String = "id",
+        @Query("sortBy") sortBy: String = "publishedAt",
         @Query("apiKey") apiKey: String
     ): NewsResponse
 }

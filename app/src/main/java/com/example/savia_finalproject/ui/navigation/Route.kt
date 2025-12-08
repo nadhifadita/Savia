@@ -1,13 +1,12 @@
 package com.example.savia_finalproject.ui.navigation
 
-object Routes {
+object Route {
     const val DASHBOARD = "dashboard"
     const val SPLASH = "splash"
     const val TRANSAKSI = "transaksi"
     const val LOGIN = "login"
     const val SIGNUP = "sign up"
     const val PROFILE = "profile"
-
     const val GOALS = "tujuan"
     const val EDUCATION = "edukasi"
 }

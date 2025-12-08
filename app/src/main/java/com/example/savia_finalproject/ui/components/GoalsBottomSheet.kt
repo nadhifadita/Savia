@@ -3,7 +3,6 @@ package com.example.savia_finalproject.ui.components
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.*
@@ -14,15 +13,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.savia_finalproject.data.model.Goal
+import com.example.savia_finalproject.data.model.Goals
+import com.example.savia_finalproject.ui.components.SaviaOutlinedField
 
 @Composable
-fun GoalBottomSheet(
+fun GoalsBottomSheet(
     onDismiss: () -> Unit,
-    onSave: (Goal) -> Unit
+    onSave: (Goals) -> Unit
 ) {
 
 
@@ -49,7 +48,6 @@ fun GoalBottomSheet(
         }
         Spacer(modifier = Modifier.height(24.dp))
 
-        // Input untuk Judul
         SaviaOutlinedField(
             label = "Nama Target",
             placeholder = "mis: Beli Mesin Kopi",
@@ -59,7 +57,6 @@ fun GoalBottomSheet(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Input untuk Jumlah
         SaviaOutlinedField(
             label = "Jumlah Target",
             placeholder = "mis: 5000000",
@@ -73,7 +70,7 @@ fun GoalBottomSheet(
         Button(
             onClick = {
                 if (title.isNotBlank()) {
-                    val newGoalObject = Goal(
+                    val newGoalObject = Goals(
                         title = title,
                         targetAmount = targetAmount.toLongOrNull() ?: 0L
                     )

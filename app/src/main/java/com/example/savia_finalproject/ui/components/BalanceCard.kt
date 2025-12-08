@@ -24,28 +24,26 @@ fun BalanceCard(
     income: String,
     expense: String
 ) {
-    // Definisi Gradient Modern (Biru ke Ungu muda)
     val brush = Brush.horizontalGradient(
         colors = listOf(
-            Color(0xFF0061FF), // Biru terang
-            Color(0xFF60EFFF)  // Cyan cerah
+            Color(0xFF0061FF),
+            Color(0xFF60EFFF)
         )
     )
 
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .height(200.dp), // Sedikit lebih tinggi agar lega
-        shape = RoundedCornerShape(24.dp), // Radius lebih membulat
-        elevation = CardDefaults.cardElevation(8.dp) // Shadow lebih menonjol
+            .height(200.dp),
+        shape = RoundedCornerShape(24.dp),
+        elevation = CardDefaults.cardElevation(8.dp)
     ) {
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(brush) // Pakai gradient
+                .background(brush)
                 .padding(24.dp)
         ) {
-            // Hiasan lingkaran transparan di background (opsional, untuk estetika)
             Box(
                 modifier = Modifier
                     .size(100.dp)
@@ -91,10 +89,8 @@ fun BalanceCard(
                         label = "Pemasukan",
                         amount = income,
                         icon = Icons.Default.ArrowUpward,
-                        iconColor = Color(0xFF4CAF50) // Hijau
+                        iconColor = Color(0xFF4CAF50)
                     )
-
-                    // Garis pemisah vertikal tipis
                     Box(
                         modifier = Modifier
                             .width(1.dp)

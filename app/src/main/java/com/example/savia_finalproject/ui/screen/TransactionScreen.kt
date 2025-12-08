@@ -44,18 +44,15 @@ private val BlueGradientEnd = Color(0xFF4364F7)
 fun TransactionScreen(viewModel: TransactionViewModel, navController: NavHostController) {
     val txs by viewModel.transactions.collectAsState()
 
-    // --- 1. SETUP STATE UNTUK BOTTOM SHEET ---
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     val scope = rememberCoroutineScope()
     var showBottomSheet by remember { mutableStateOf(false) }
 
-    // State untuk Filter
     var selectedType by remember { mutableStateOf<TransactionType?>(null) }
     var selectedMonth by remember { mutableStateOf<String?>(null) }
 
     val monthFormat = SimpleDateFormat("MMMM yyyy", Locale("id", "ID"))
 
-    // Data Grouping & Filtering
     val summaryMap = txs.sortedBy { it.date }.groupBy { monthFormat.format(it.date) }
 
     val filteredTransactions = txs.filter { tx ->
@@ -69,8 +66,6 @@ fun TransactionScreen(viewModel: TransactionViewModel, navController: NavHostCon
     Scaffold(
         containerColor = BgGray,
         bottomBar = { BottomNavBar(navController = navController) },
-
-        // --- 2. TAMBAHKAN FLOATING ACTION BUTTON (FAB) ---
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {
@@ -90,8 +85,6 @@ fun TransactionScreen(viewModel: TransactionViewModel, navController: NavHostCon
     ) { padding ->
 
         Box(modifier = Modifier.fillMaxSize()) {
-
-            // Header Background
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -110,7 +103,6 @@ fun TransactionScreen(viewModel: TransactionViewModel, navController: NavHostCon
                     .padding(padding)
             ) {
 
-                // Top Bar
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -136,8 +128,6 @@ fun TransactionScreen(viewModel: TransactionViewModel, navController: NavHostCon
                         Text("Belum ada data transaksi.", color = Color.Gray)
                     }
                 } else {
-
-                    // --- RINGKASAN BULANAN ---
                     Column(modifier = Modifier.padding(bottom = 8.dp)) {
                         Row(
                             modifier = Modifier.fillMaxWidth().padding(horizontal = 24.dp, vertical = 8.dp),
@@ -195,7 +185,6 @@ fun TransactionScreen(viewModel: TransactionViewModel, navController: NavHostCon
                         FilterChipBtn("Pengeluaran", selectedType == TransactionType.PENGELUARAN) { selectedType = TransactionType.PENGELUARAN }
                     }
 
-                    // --- LIST TRANSAKSI ---
                     if (filteredTransactions.isEmpty()) {
                         Box(modifier = Modifier.fillMaxSize().padding(top = 40.dp), contentAlignment = Alignment.TopCenter) {
                             Text("Tidak ada transaksi sesuai filter.", color = Color.Gray)
@@ -233,7 +222,6 @@ fun TransactionScreen(viewModel: TransactionViewModel, navController: NavHostCon
         }
     }
 
-    // --- 3. IMPLEMENTASI BOTTOM SHEET ---
     if (showBottomSheet) {
         ModalBottomSheet(
             onDismissRequest = {
@@ -242,7 +230,7 @@ fun TransactionScreen(viewModel: TransactionViewModel, navController: NavHostCon
                 }
             },
             sheetState = sheetState,
-            containerColor = Color.White // Background putih agar sama dengan dashboard
+            containerColor = Color.White
         ) {
             TransactionBottomSheet(
                 onDismiss = {
@@ -257,9 +245,6 @@ fun TransactionScreen(viewModel: TransactionViewModel, navController: NavHostCon
         }
     }
 }
-
-// ... (Komponen FilterChipBtn, MonthlyCardSelectable, TransactionItemSimple SAMA SEPERTI SEBELUMNYA) ...
-// Sertakan kembali komponen di bawah ini agar file lengkap saat dicopy-paste
 
 @Composable
 fun FilterChipBtn(label: String, isSelected: Boolean, onClick: () -> Unit) {

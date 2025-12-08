@@ -3,7 +3,7 @@ package com.example.savia_finalproject.viewmodel
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.savia_finalproject.data.model.Goal
+import com.example.savia_finalproject.data.model.Goals
 import com.example.savia_finalproject.data.repository.GoalsRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -15,8 +15,8 @@ class GoalsViewModel(
     private val repository: GoalsRepository
 ) : ViewModel() {
 
-    private val _goals = MutableStateFlow<List<Goal>>(emptyList())
-    val goals: StateFlow<List<Goal>> = _goals
+    private val _goals = MutableStateFlow<List<Goals>>(emptyList())
+    val goals: StateFlow<List<Goals>> = _goals
 
     private val _balance = MutableStateFlow<Long>(0)
     val balance: StateFlow<Long> = _balance
@@ -45,7 +45,7 @@ class GoalsViewModel(
     fun addGoal(title: String, amount: Long) {
         viewModelScope.launch {
             repository.addGoal(
-                Goal(
+                Goals(
                     title = title,
                     targetAmount = amount
                 )
@@ -55,7 +55,7 @@ class GoalsViewModel(
     }
 
 
-    fun convertGoal(goal: Goal) {
+    fun convertGoal(goal: Goals) {
         viewModelScope.launch {
             repository.convertGoalToTransaction(goal)
             loadGoals()
@@ -64,7 +64,7 @@ class GoalsViewModel(
     }
 
 
-    fun isGoalReady(goal: Goal): Boolean {
+    fun isGoalReady(goal: Goals): Boolean {
         return balance.value >= goal.targetAmount
     }
 
@@ -74,3 +74,4 @@ class GoalsViewModel(
         }
     }
 }
+

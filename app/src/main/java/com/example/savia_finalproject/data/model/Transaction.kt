@@ -14,3 +14,4 @@ data class Transaction(
 enum class TransactionType {
     PEMASUKAN, PENGELUARAN
 }
+

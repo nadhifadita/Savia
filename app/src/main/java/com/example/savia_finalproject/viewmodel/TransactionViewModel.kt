@@ -135,3 +135,4 @@ class TransactionViewModel : ViewModel() {
         return numberFormat.format(amount)
     }
 }
+

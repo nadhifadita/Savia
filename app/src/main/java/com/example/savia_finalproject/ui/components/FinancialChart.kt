@@ -26,7 +26,6 @@ import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 
-// Warna Tema
 private val BluePrimary = Color(0xFF0052D4)
 private val YellowAccent = Color(0xFFFFC107)
 
@@ -72,7 +71,7 @@ fun FinancialChart(
                     )
                 }
 
-                // TOGGLE BUTTON (Mingguan | Bulanan)
+                // TOGGLE BUTTON
                 Row(
                     modifier = Modifier
                         .background(Color(0xFFF5F7FA), RoundedCornerShape(20.dp))
@@ -86,7 +85,7 @@ fun FinancialChart(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // CHART AREA
+            // CHART
             if (currentEntries.isEmpty()) {
                 Box(
                     modifier = Modifier.fillMaxWidth().height(220.dp),
@@ -95,7 +94,6 @@ fun FinancialChart(
                     Text("Belum ada data transaksi", color = Color.LightGray)
                 }
             } else {
-                // Gunakan Crossfade untuk animasi halus saat ganti mode
                 Crossfade(targetState = currentEntries, label = "ChartAnimation") { entries ->
                     AndroidView(
                         modifier = Modifier
@@ -132,7 +130,6 @@ fun FinancialChart(
                             }
                         },
                         update = { chart ->
-                            // Update Formatter Sumbu X
                             chart.xAxis.valueFormatter = IndexAxisValueFormatter(currentLabels)
 
                             val dataSet = LineDataSet(entries, "Saldo").apply {

@@ -16,3 +16,4 @@ class GoalsViewModelFactory(
         throw IllegalArgumentException("Unknown ViewModel class")
     }
 }
+

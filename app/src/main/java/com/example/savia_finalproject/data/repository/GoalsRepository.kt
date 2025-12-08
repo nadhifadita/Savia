@@ -1,7 +1,7 @@
 package com.example.savia_finalproject.data.repository
 
 import android.util.Log
-import com.example.savia_finalproject.data.model.Goal
+import com.example.savia_finalproject.data.model.Goals
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
@@ -17,18 +17,18 @@ class GoalsRepository(
 
     private fun goalsRef() = userRef().collection("goals")
 
-    suspend fun addGoal(goal: Goal) {
+    suspend fun addGoal(goal: Goals) {
         val doc = goalsRef().document()
         val newGoal = goal.copy(id = doc.id)
         doc.set(newGoal).await()
     }
 
-    suspend fun getGoals(): List<Goal> {
+    suspend fun getGoals(): List<Goals> {
         return goalsRef()
             .orderBy("createdAt")
             .get()
             .await()
-            .toObjects(Goal::class.java)
+            .toObjects(Goals::class.java)
     }
     suspend fun deleteGoal(goalId: String) {
         try {
@@ -45,7 +45,7 @@ class GoalsRepository(
             .await()
     }
 
-    suspend fun convertGoalToTransaction(goal: Goal) {
+    suspend fun convertGoalToTransaction(goal: Goals) {
         val userDoc = userRef()
             .get()
             .await()

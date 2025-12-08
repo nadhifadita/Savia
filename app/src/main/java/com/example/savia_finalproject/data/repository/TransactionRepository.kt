@@ -1,6 +1,6 @@
 package com.example.savia_finalproject.data.repository
 
-import com.example.savia_finalproject.data.model.Goal
+import com.example.savia_finalproject.data.model.Goals
 import com.example.savia_finalproject.data.model.Transaction
 import com.example.savia_finalproject.data.model.TransactionType
 import com.google.firebase.auth.FirebaseAuth
@@ -14,14 +14,6 @@ class TransactionRepository {
     private val db = FirebaseFirestore.getInstance()
     private val auth = FirebaseAuth.getInstance()
 
-    /**
-     * Mengembalikan Flow<List<Transaction>> yang mendengarkan dokumen user
-     * dan mem-parsing field "transactions" yang berupa List<Map<String, Any>>.
-     *
-     * Ini sesuai dengan cara `TransactionBottomSheet` yang kamu kirim:
-     * - BottomSheet menyimpan transaksi di field "transactions" pada dokumen user
-     *   (bukan di subcollection).
-     */
     fun getTransactions(): Flow<List<Transaction>> = callbackFlow {
         val uid = auth.currentUser?.uid
         if (uid == null) {
@@ -33,7 +25,6 @@ class TransactionRepository {
         val userRef = db.collection("users").document(uid)
         val listener = userRef.addSnapshotListener { snapshot, error ->
             if (error != null) {
-                // Bila error, kirim list kosong (atau bisa juga close())
                 trySend(emptyList())
                 return@addSnapshotListener
             }
@@ -46,17 +37,14 @@ class TransactionRepository {
                     raw.forEach { item ->
                         try {
                             if (item is Map<*, *>) {
-                                // Ambil field dengan aman
                                 val map = item as Map<String, Any?>
 
-                                // id: ada kemungkinan tidak disimpan; gunakan date atau timestamp sebagai fallback
                                 val idFromMap = (map["id"] as? Number)?.toLong()
                                 val dateMillisFromMap = (map["date"] as? Number)?.toLong()
                                     ?: (map["date"] as? com.google.firebase.Timestamp)?.toDate()?.time
 
                                 val idValue = idFromMap ?: dateMillisFromMap ?: Date().time
 
-                                // type: disimpan sebagai String "PEMASUKAN" / "PENGELUARAN"
                                 val typeStr = (map["type"] as? String) ?: "PENGELUARAN"
                                 val type = try {
                                     TransactionType.valueOf(typeStr)
@@ -87,12 +75,10 @@ class TransactionRepository {
                                 txList.add(tx)
                             }
                         } catch (e: Exception) {
-                            // skip item yang bermasalah, jangan crash
                         }
                     }
                 }
             } catch (e: Exception) {
-                // jika parsing overall gagal, kirim list kosong
             }
 
             trySend(txList)

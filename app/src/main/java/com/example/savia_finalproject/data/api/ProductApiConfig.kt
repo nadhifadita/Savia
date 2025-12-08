@@ -10,7 +10,6 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
 
-// Model Data Produk
 data class ProductResponse(
     val name: String,
     val rate: String,
@@ -29,17 +28,13 @@ data class ProductResponse(
     }
 }
 
-// Interface API
 interface ProductApiService {
     @GET("f4ed1799bdbe86cd84d3")
     suspend fun getRealProducts(): List<ProductResponse>
 }
 
-// Retrofit Client
 object ProductClient {
-    // Base URL npoint
     private const val BASE_URL = "https://api.npoint.io/"
-
     val instance: ProductApiService by lazy {
         Retrofit.Builder()
             .baseUrl(BASE_URL)

@@ -58,7 +58,7 @@ fun TransactionBottomSheet(
     if (showDatePicker.value) {
         val datePickerState = rememberDatePickerState(
             initialSelectedDateMillis = selectedDate.time,
-            yearRange = 2000..2030 // Sesuaikan rentang tahun jika perlu
+            yearRange = 2000..2030
         )
         DatePickerDialog(
             onDismissRequest = { showDatePicker.value = false },
@@ -66,7 +66,6 @@ fun TransactionBottomSheet(
                 TextButton(
                     onClick = {
                         showDatePicker.value = false
-                        // Ambil tanggal pilihan (epoch millis) dan ubah ke objek Date
                         datePickerState.selectedDateMillis?.let { millis ->
                             selectedDate = Date(millis)
                         }
@@ -100,7 +99,6 @@ fun TransactionBottomSheet(
 
         Spacer(modifier = Modifier.height(12.dp))
 
-        // Type toggle
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             val inactive = Color(0xFFE5E7EB)
             Button(
@@ -209,11 +207,9 @@ fun TransactionBottomSheet(
                     db.runTransaction { transaction ->
                         val snapshot = transaction.get(userRef)
 
-                        // Ambil saldo lama (default 0 jika belum ada)
                         val oldBalance = snapshot.getDouble("balance") ?: 0.0
                         val newBalance = oldBalance + finalAmount
 
-                        // Ambil transaksi lama, lalu tambahkan transaksi baru
                         val oldTransactions = snapshot.get("transactions") as? List<Map<String, Any>> ?: emptyList()
 
                         val newTransaction = mapOf(
@@ -221,12 +217,11 @@ fun TransactionBottomSheet(
                             "description" to tx.description,
                             "amount" to tx.amount,
                             "category" to tx.category,
-                            "date" to tx.date.time // simpan timestamp
+                            "date" to tx.date.time
                         )
 
                         val updatedTransactions = oldTransactions + newTransaction
 
-                        // Update balance dan transaksi di Firestore
                         transaction.update(userRef, mapOf(
                             "balance" to newBalance,
                             "transactions" to updatedTransactions

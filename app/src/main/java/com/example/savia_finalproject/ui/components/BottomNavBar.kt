@@ -11,7 +11,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.graphics.Color
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.example.savia_finalproject.ui.navigation.Routes
+import com.example.savia_finalproject.ui.navigation.Route
 
 private val BluePrimary = Color(0xFF0052D4)
 
@@ -25,11 +25,11 @@ fun BottomNavBar(navController: NavController) {
         contentColor = BluePrimary
     ) {
         val items = listOf(
-            Triple(Routes.DASHBOARD, "Beranda", Icons.Default.Home),
-            Triple(Routes.TRANSAKSI, "transaksi", Icons.AutoMirrored.Filled.List),
-            Triple(Routes.GOALS, "Target", Icons.Default.Flag), // Fitur Target Tabungan
-            Triple(Routes.EDUCATION, "Edukasi", Icons.Default.Book), // Fitur Edukasi
-            Triple(Routes.PROFILE, "Profil", Icons.Default.Person)
+            Triple(Route.DASHBOARD, "Beranda", Icons.Default.Home),
+            Triple(Route.TRANSAKSI, "transaksi", Icons.AutoMirrored.Filled.List),
+            Triple(Route.GOALS, "Target", Icons.Default.Flag), // Fitur Target Tabungan
+            Triple(Route.EDUCATION, "Edukasi", Icons.Default.Book), // Fitur Edukasi
+            Triple(Route.PROFILE, "Profil", Icons.Default.Person)
         )
 
         items.forEach { (route, label, icon) ->
@@ -38,7 +38,7 @@ fun BottomNavBar(navController: NavController) {
                 onClick = {
                     if (currentRoute != route) {
                         navController.navigate(route) {
-                            popUpTo(Routes.DASHBOARD) { saveState = true }
+                            popUpTo(Route.DASHBOARD) { saveState = true }
                             launchSingleTop = true
                             restoreState = true
                         }
@@ -57,3 +57,4 @@ fun BottomNavBar(navController: NavController) {
         }
     }
 }
+

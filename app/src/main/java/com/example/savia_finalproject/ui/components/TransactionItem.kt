@@ -79,7 +79,6 @@ fun TransactionItem(transaction: Transaction) {
                 )
             }
 
-            // Jumlah (Amount)
             Text(
                 text = numberFormat.format(transaction.amount),
                 color = if (transaction.type == TransactionType.PEMASUKAN) greenColor else redColor,

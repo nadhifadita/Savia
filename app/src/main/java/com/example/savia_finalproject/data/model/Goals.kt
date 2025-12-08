@@ -1,6 +1,6 @@
 package com.example.savia_finalproject.data.model
 
-data class Goal(
+data class Goals(
     val id: String = "",
     val title: String = "",
     val targetAmount: Long = 0,
@@ -8,3 +8,4 @@ data class Goal(
     val isCompleted: Boolean = false,
     val createdAt: Long = System.currentTimeMillis()
 )
+

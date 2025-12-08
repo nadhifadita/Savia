@@ -10,8 +10,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.Visibility
-import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -21,8 +19,6 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -42,11 +38,8 @@ fun ProfileScreen(navController: NavController) {
     val user = auth.currentUser
 
     var email by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("********") } // Mock password
     var createdAt by remember { mutableStateOf("") }
-    var passwordVisible by remember { mutableStateOf(false) }
 
-    // Fetch Data
     LaunchedEffect(user) {
         user?.uid?.let { uid ->
             db.collection("users").document(uid).get()
@@ -68,20 +61,27 @@ fun ProfileScreen(navController: NavController) {
 
     Scaffold(
         bottomBar = { BottomNavBar(navController = navController) },
-        containerColor = BgGray // Background abu muda
+        // 1. Ubah container jadi transparan agar background kita sendiri yang terlihat
+        containerColor = Color.Transparent
     ) { padding ->
 
-        Box(modifier = Modifier.fillMaxSize().padding(padding)) {
-
+        // 2. Gunakan Box utama dengan background abu, mengisi seluruh layar
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(BgGray)
+        ) {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
                     .verticalScroll(rememberScrollState())
+                    // 3. HANYA ambil padding bawah (dari navbar). Padding atas dibiarkan 0.
+                    .padding(bottom = padding.calculateBottomPadding())
             ) {
                 // 1. HEADER AREA (Overlap Style)
                 Box(
                     contentAlignment = Alignment.BottomCenter,
-                    modifier = Modifier.fillMaxWidth().height(220.dp) // Tinggi area header total
+                    modifier = Modifier.fillMaxWidth().height(250.dp) // Sedikit ditinggikan agar pas dengan status bar
                 ) {
                     // Background Biru Lengkung
                     Box(
@@ -101,7 +101,8 @@ fun ProfileScreen(navController: NavController) {
                             color = Color.White,
                             fontSize = 20.sp,
                             fontWeight = FontWeight.Bold,
-                            modifier = Modifier.padding(top = 40.dp, start = 24.dp)
+                            // 4. Tambah padding top lebih besar (60.dp) agar tidak tertutup jam/status bar
+                            modifier = Modifier.padding(top = 60.dp, start = 24.dp)
                         )
                     }
 
@@ -151,34 +152,35 @@ fun ProfileScreen(navController: NavController) {
 
                             Divider(color = Color.LightGray.copy(alpha = 0.3f))
 
-                            // Password
-                            // Custom field untuk password visibility
-//                            Column {
-//                                Text("Password", fontSize = 12.sp, color = Color.Gray)
-//                                OutlinedTextField(
-//                                    value = password,
-//                                    onValueChange = {},
-//                                    readOnly = true,
-//                                    visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-//                                    trailingIcon = {
-//                                        IconButton(onClick = { passwordVisible = !passwordVisible }) {
-//                                            Icon(
-//                                                imageVector = if (passwordVisible) Icons.Filled.VisibilityOff else Icons.Filled.Visibility,
-//                                                contentDescription = null,
-//                                                tint = BluePrimary
-//                                            )
-//                                        }
-//                                    },
-//                                    modifier = Modifier.fillMaxWidth(),
-//                                    colors = OutlinedTextFieldDefaults.colors(
-//                                        unfocusedBorderColor = Color.Transparent,
-//                                        focusedBorderColor = Color.Transparent
-//                                    ),
-//                                    textStyle = LocalTextStyle.current.copy(fontWeight = FontWeight.SemiBold)
-//                                )
-//                            }
-//
-//                            Divider(color = Color.LightGray.copy(alpha = 0.3f))
+                            // Bagian Password (Sesuai kode asli, dikomentari)
+                            /*
+                            Column {
+                                Text("Password", fontSize = 12.sp, color = Color.Gray)
+                                OutlinedTextField(
+                                    value = password,
+                                    onValueChange = {},
+                                    readOnly = true,
+                                    visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+                                    trailingIcon = {
+                                        IconButton(onClick = { passwordVisible = !passwordVisible }) {
+                                            Icon(
+                                                imageVector = if (passwordVisible) Icons.Filled.VisibilityOff else Icons.Filled.Visibility,
+                                                contentDescription = null,
+                                                tint = BluePrimary
+                                            )
+                                        }
+                                    },
+                                    modifier = Modifier.fillMaxWidth(),
+                                    colors = OutlinedTextFieldDefaults.colors(
+                                        unfocusedBorderColor = Color.Transparent,
+                                        focusedBorderColor = Color.Transparent
+                                    ),
+                                    textStyle = LocalTextStyle.current.copy(fontWeight = FontWeight.SemiBold)
+                                )
+                            }
+
+                            Divider(color = Color.LightGray.copy(alpha = 0.3f))
+                            */
 
                             // Created At
                             ProfileField(label = "Bergabung Sejak", value = createdAt, icon = null)

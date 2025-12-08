@@ -53,9 +53,8 @@ fun EducationScreen(
     var showLoanCalculator by remember { mutableStateOf(false) }
     var showSavingsCalculator by remember { mutableStateOf(false) }
 
-    // Observe Data Real-time
     val newsList by viewModel.newsList.collectAsState()
-    val productList by viewModel.productList.collectAsState() // Data Produk dari Internet
+    val productList by viewModel.productList.collectAsState()
     val isLoading by viewModel.isLoading.collectAsState()
     val errorMessage by viewModel.errorMessage.collectAsState()
 
@@ -73,26 +72,22 @@ fun EducationScreen(
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                // Hapus padding bawah dari sini, akan kita pindahkan
             ) {
 
-                // 1. HEADER BIRU (Tingginya kita kurangi agar tidak terlalu banyak ruang kosong)
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        // --- KURANGI TINGGI HEADER DI SINI ---
-                        .height(180.dp) // Coba nilai antara 160.dp - 180.dp
+                        .height(180.dp)
                         .clip(RoundedCornerShape(bottomStart = 40.dp, bottomEnd = 40.dp))
                         .background(
                             brush = Brush.verticalGradient(colors = listOf(BluePrimary, BlueGradientEnd))
                         )
                 ) {
-                    // Konten Header (sedikit disesuaikan padding-nya)
                     Column(
                         modifier = Modifier
-                            .fillMaxSize() // Isi penuh Box header
-                            .padding(start = 24.dp, end = 24.dp), // Padding horizontal
-                        verticalArrangement = Arrangement.Center // Tengahkan konten secara vertikal
+                            .fillMaxSize()
+                            .padding(start = 24.dp, end = 24.dp),
+                        verticalArrangement = Arrangement.Center
                     ) {
                         Text("Pusat Literasi", color = Color.White, fontSize = 26.sp, fontWeight = FontWeight.Bold)
                         Spacer(modifier = Modifier.height(8.dp))
@@ -104,22 +99,17 @@ fun EducationScreen(
                     }
                 }
 
-                // KONTEN SCROLLABLE (LazyColumn)
                 LazyColumn(
                     modifier = Modifier
                         .fillMaxSize()
-                        // HAPUS .offset(y = (-60).dp)
-                        // contentPadding sekarang menangani semua padding yang diperlukan
-                        .padding(top = 24.dp), // Beri jarak atas dari header biru
+                        .padding(top = 24.dp),
                     contentPadding = PaddingValues(
-                        bottom = padding.calculateBottomPadding() + 24.dp // Padding untuk BottomNavBar + jarak bawah
+                        bottom = padding.calculateBottomPadding() + 24.dp
                     )
                 ) {
 
-                    // 2. BAGIAN ALAT BANTU (2 Kalkulator)
                     item {
                         Column(modifier = Modifier.padding(horizontal = 24.dp)) {
-                            // Card Container Putih Besar untuk Kalkulator
                             Card(
                                 colors = CardDefaults.cardColors(containerColor = Color.White),
                                 shape = RoundedCornerShape(20.dp),
@@ -153,7 +143,6 @@ fun EducationScreen(
                         }
                     }
 
-                    // 3. REKOMENDASI PRODUK (REAL DATA)
                     item {
                         Column(modifier = Modifier.padding(start = 24.dp, end = 24.dp, top = 24.dp)) {
                             Text("Peluang Investasi Terkini", fontWeight = FontWeight.Bold, fontSize = 18.sp, color = Color(0xFF1A1A1A))
@@ -162,7 +151,6 @@ fun EducationScreen(
                         }
 
                         if (productList.isEmpty()) {
-                            // Loading State
                             Box(modifier = Modifier.fillMaxWidth().height(150.dp), contentAlignment = Alignment.Center) {
                                 CircularProgressIndicator(color = BluePrimary)
                             }
@@ -173,7 +161,6 @@ fun EducationScreen(
                             ) {
                                 items(productList) { product ->
                                     ProductCardReal(product) {
-                                        // Aksi Klik: Buka Link Produk
                                         val intent = Intent(Intent.ACTION_VIEW, Uri.parse(product.url))
                                         context.startActivity(intent)
                                     }
@@ -182,7 +169,6 @@ fun EducationScreen(
                         }
                     }
 
-                    // 4. BERITA (Max 10)
                     item {
                         Column(modifier = Modifier.padding(horizontal = 24.dp)) {
                             Spacer(modifier = Modifier.height(24.dp))
@@ -213,12 +199,10 @@ fun EducationScreen(
         }
     }
 
-    // Dialogs
     if (showLoanCalculator) LoanCalculatorDialog { showLoanCalculator = false }
     if (showSavingsCalculator) SavingsTargetDialog { showSavingsCalculator = false }
 }
 
-// --- KOMPONEN ITEM KALKULATOR (Simple) ---
 @Composable
 fun CalculatorItem(
     title: String,
@@ -241,13 +225,12 @@ fun CalculatorItem(
     }
 }
 
-// --- CARD PRODUK REAL (CLICKABLE) ---
 @Composable
 fun ProductCardReal(product: ProductResponse, onClick: () -> Unit) {
     Card(
         modifier = Modifier
-            .width(160.dp) // Lebar proporsional
-            .height(190.dp) // Tinggi tetap
+            .width(160.dp)
+            .height(190.dp)
             .clickable { onClick() },
         colors = CardDefaults.cardColors(containerColor = Color.White),
         elevation = CardDefaults.cardElevation(4.dp),
@@ -255,16 +238,14 @@ fun ProductCardReal(product: ProductResponse, onClick: () -> Unit) {
     ) {
         Column(
             modifier = Modifier
-                .fillMaxSize() // Paksa Column mengisi seluruh area kartu
+                .fillMaxSize()
                 .padding(12.dp),
-            // UBAH INI: Gunakan Center agar konten mengumpul di tengah vertikal
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            // Icon Container
             Box(
                 modifier = Modifier
-                    .size(50.dp) // Ukuran lingkaran background
+                    .size(50.dp)
                     .background(YellowAccent.copy(alpha = 0.2f), CircleShape),
                 contentAlignment = Alignment.Center
             ) {
@@ -272,20 +253,19 @@ fun ProductCardReal(product: ProductResponse, onClick: () -> Unit) {
                     imageVector = product.getIcon(),
                     contentDescription = null,
                     tint = Color(0xFFF57F17),
-                    modifier = Modifier.size(28.dp) // Ukuran icon di dalam lingkaran
+                    modifier = Modifier.size(28.dp)
                 )
             }
 
-            Spacer(modifier = Modifier.height(12.dp)) // Jarak konsisten antara Icon dan Teks
+            Spacer(modifier = Modifier.height(12.dp))
 
-            // Nama Produk
             Text(
                 text = product.name,
                 fontWeight = FontWeight.Bold,
                 fontSize = 13.sp,
                 maxLines = 2,
-                minLines = 2, // Trik agar tinggi teks stabil meski 1 atau 2 baris
-                textAlign = TextAlign.Center, // Rata tengah horizontal
+                minLines = 2,
+                textAlign = TextAlign.Center,
                 lineHeight = 16.sp,
                 overflow = TextOverflow.Ellipsis,
                 color = Color.Black
@@ -293,7 +273,6 @@ fun ProductCardReal(product: ProductResponse, onClick: () -> Unit) {
 
             Spacer(modifier = Modifier.height(4.dp))
 
-            // Rate (Bunga/Return)
             Text(
                 text = product.rate,
                 fontSize = 12.sp,
@@ -304,7 +283,6 @@ fun ProductCardReal(product: ProductResponse, onClick: () -> Unit) {
 
             Spacer(modifier = Modifier.height(2.dp))
 
-            // Risiko
             Text(
                 text = "Risiko: ${product.risk}",
                 fontSize = 11.sp,
@@ -315,7 +293,6 @@ fun ProductCardReal(product: ProductResponse, onClick: () -> Unit) {
     }
 }
 
-// --- DIALOG BARU: KALKULATOR TARGET MENABUNG ---
 @Composable
 fun SavingsTargetDialog(onDismiss: () -> Unit) {
     var targetAmount by remember { mutableStateOf("") }
@@ -381,7 +358,7 @@ fun SavingsTargetDialog(onDismiss: () -> Unit) {
                     },
                     modifier = Modifier.fillMaxWidth().height(48.dp),
                     shape = RoundedCornerShape(10.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF4CAF50)) // Hijau
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF4CAF50))
                 ) {
                     Text("Hitung Target", fontWeight = FontWeight.Bold)
                 }
