@@ -62,7 +62,6 @@ fun EducationScreen(
 
     Scaffold(
         bottomBar = { BottomNavBar(navController) },
-        // Set container color transparan agar background header bisa full
         containerColor = Color.Transparent
     ) { padding ->
 
@@ -525,4 +524,5 @@ fun LoanCalculatorDialog(onDismiss: () -> Unit) {
             }
         }
     }
+
 }
